@@ -1,5 +1,4 @@
 package nl.anouk.bikerental.dtos;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,9 +8,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BikeDto {
 
-    private Long id;
+public class BikeInputDto {
     private String brand;
     private String size;
     private Long registrationNo;
