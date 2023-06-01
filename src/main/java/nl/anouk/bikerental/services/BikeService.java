@@ -1,5 +1,9 @@
 package nl.anouk.bikerental.services;
 
+import nl.anouk.bikerental.dtos.BikeDto;
+import nl.anouk.bikerental.dtos.BikeInputDto;
+import nl.anouk.bikerental.models.Bike;
+import nl.anouk.bikerental.repositories.BikeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
