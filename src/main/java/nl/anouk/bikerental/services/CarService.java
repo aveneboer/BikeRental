@@ -1,6 +1,7 @@
 package nl.anouk.bikerental.services;
 import nl.anouk.bikerental.dtos.CarDto;
 import nl.anouk.bikerental.dtos.CarInputDto;
+import nl.anouk.bikerental.exceptions.RecordNotFoundException;
 import nl.anouk.bikerental.models.Car;
 import nl.anouk.bikerental.repositories.CarRepository;
 import org.springframework.stereotype.Service;
