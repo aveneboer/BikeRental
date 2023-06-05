@@ -27,10 +27,15 @@ public class Reservation {
 
     @Column(name = "end_date")
     private LocalDateTime endDate;
+
+    @Column(name = "type")
+    private String type;
+
+    @Column(name = "availability")
+    private boolean availability;
+
+
 /*
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vehicle_id")
-    private Vehicle vehicle;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")

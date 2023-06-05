@@ -14,8 +14,10 @@ import java.util.List;
 public class ReservationInputDto {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private Long vehicleId;
     private Long customerId;
+    private String type;
+    private boolean availability;
+
 /*    private List<ReservationLineInputDto> reservationLines;*/
 
 

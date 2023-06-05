@@ -10,9 +10,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
+@Entity
 @Table(name = "cars")
-@Inheritance
-public class Car extends Vehicle {
+public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -21,6 +21,7 @@ public class Car extends Vehicle {
 
     @Column(name = "capacity")
     private int passenger;
-
+    @Column(name = "day_price")
+    private double DayPrice;
 
 }

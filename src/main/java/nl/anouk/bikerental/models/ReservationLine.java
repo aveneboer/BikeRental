@@ -39,9 +39,6 @@ public class ReservationLine {
     @Column(name = "total_price")
     private double totalPrice;
 /*
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vehicle_id", insertable = false, updatable = false)
-    private Vehicle vehicle;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reservation_id", insertable = false, updatable = false)

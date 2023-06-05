@@ -17,8 +17,9 @@ public class ReservationDto {
     private Long reservationId;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-/*    private VehicleDto vehicle;
-    private CustomerDto customer;
+    private String type;
+    private boolean availability;
+ /*   private CustomerDto customer;
     private List<ReservationLineDto> reservationLines;*/
 
 }
