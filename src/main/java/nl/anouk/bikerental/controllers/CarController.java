@@ -1,3 +1,4 @@
+/*
 package nl.anouk.bikerental.controllers;
 
 import jakarta.validation.Valid;
@@ -6,8 +7,12 @@ import nl.anouk.bikerental.dtos.CarInputDto;
 import nl.anouk.bikerental.services.CarService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,12 +48,26 @@ public class CarController {
 
     }
 
-    @PostMapping("/cars")
-    public ResponseEntity<Object> addCar(@Valid @RequestBody CarInputDto carInputDto) {
 
-        CarDto dto = carService.addCar(carInputDto);
+    @PostMapping("/addCar")
+    public ResponseEntity<Object> addCar(@Valid @RequestBody CarInputDto carInputDto, BindingResult br) {
+        if (br.hasFieldErrors()) {
+            StringBuilder sb = new StringBuilder();
+            for (FieldError fe : br.getFieldErrors()) {
+                sb.append(fe.getField() + ": ");
+                sb.append(fe.getDefaultMessage());
+                sb.append("\n");
+            }
+            return ResponseEntity.badRequest().body(sb.toString());
+        } else {
+            CarDto createdCar = carService.addCar(carInputDto);
 
-        return ResponseEntity.created(null).body(dto);
+            URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().path("/" + createdCar.getId()).toUriString());
+
+            return ResponseEntity.created(uri).body(createdCar);
+        }
+
+
     }
 
     @DeleteMapping("/cars/{id}")
@@ -58,12 +77,15 @@ public class CarController {
     }
 
 
-    @PutMapping("/cars/{id}")
+*/
+/*    @PutMapping("/cars/{id}")
     public ResponseEntity<Object> updateCar(@PathVariable Long id, @Valid @RequestBody CarInputDto newCar) {
         CarDto dto = carService.updateCar(id, newCar);
 
         return ResponseEntity.ok().body(dto);
 
-    }
+    }*//*
+
 
 }
+*/

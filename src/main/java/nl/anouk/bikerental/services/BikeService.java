@@ -1,3 +1,4 @@
+/*
 package nl.anouk.bikerental.services;
 
 import nl.anouk.bikerental.dtos.BikeDto;
@@ -19,6 +20,15 @@ public class BikeService {
     public BikeService(BikeRepository bikeRepository) {
         this.bikeRepository = bikeRepository;
     }
+
+    public void deleteBike(@RequestBody Long bikeId) {
+        if (bikeRepository.existsById(bikeId)) {
+            bikeRepository.deleteById(bikeId);
+        } else {
+            throw new NoSuchElementException("Bike not found");
+        }
+    }
+}
 
     public List<BikeDto> getAllBikes() {
         List<Bike> bikeList = bikeRepository.findAll();
@@ -59,7 +69,7 @@ public class BikeService {
         }
     }
 
-    public BikeDto updateBike(Long id, BikeInputDto inputDto) {
+   public BikeDto updateBike(Long id, BikeInputDto inputDto) {
         if (bikeRepository.findAllById(id).isPresent()) {
 
             Bike bike = bikeRepository.findAllById(id).get();
@@ -76,13 +86,7 @@ public class BikeService {
         }
     }
 
-    public void deleteBike(@RequestBody Long bikeId) {
-        if (bikeRepository.existsById(bikeId)) {
-            bikeRepository.deleteById(bikeId);
-        } else {
-            throw new NoSuchElementException("Bike not found");
-        }
-    }
+
 
     public Bike transferToBike(BikeInputDto dto) {
         var bike = new Bike();
@@ -94,6 +98,7 @@ public class BikeService {
         return bike;
     }
 
+
     public BikeDto transferToDto(Bike bike) {
         BikeDto dto = new BikeDto();
 
@@ -104,4 +109,4 @@ public class BikeService {
         return dto;
     }
 
-}
+}*/

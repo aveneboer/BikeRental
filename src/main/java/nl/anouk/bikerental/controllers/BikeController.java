@@ -1,3 +1,5 @@
+/*
+
 package nl.anouk.bikerental.controllers;
 
 import jakarta.validation.Valid;
@@ -35,6 +37,7 @@ public class BikeController {
         return ResponseEntity.ok().body(dtos);
     }
 
+
     @GetMapping("/bikes/{id}")
     public ResponseEntity<BikeDto> getBike(@PathVariable("id")Long id) {
 
@@ -67,4 +70,7 @@ public class BikeController {
 
     }
 
+
 }
+*/
+

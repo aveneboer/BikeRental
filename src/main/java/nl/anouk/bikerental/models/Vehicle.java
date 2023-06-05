@@ -28,12 +28,14 @@ public class Vehicle {
     @Column(name = "hourly_price")
     private double hourlyPrice;
 
+/*
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations;
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReservationLine> reservationLines;
+*/
 
 
 

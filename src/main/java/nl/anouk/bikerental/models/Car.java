@@ -10,8 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
-@DiscriminatorValue("CAR")
 @Table(name = "cars")
+@Inheritance
 public class Car extends Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -19,7 +19,7 @@ public class Car extends Vehicle {
     @Column(name = "model")
     private String model;
 
-    @Column(name = "passengers")
+    @Column(name = "capacity")
     private int passenger;
 
 

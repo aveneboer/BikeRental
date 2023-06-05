@@ -1,3 +1,4 @@
+/*
 package nl.anouk.bikerental.services;
 import nl.anouk.bikerental.dtos.CarDto;
 import nl.anouk.bikerental.dtos.CarInputDto;
@@ -58,7 +59,7 @@ public class CarService {
         }
     }
 
-    public CarDto updateCar(Long id, CarInputDto inputDto) {
+   public CarDto updateCar(Long id, CarInputDto inputDto) {
         if (carRepository.findAllById(id).isPresent()) {
 
             Car car = carRepository.findAllById(id).get();
@@ -101,3 +102,4 @@ public class CarService {
     }
 
 }
+*/
