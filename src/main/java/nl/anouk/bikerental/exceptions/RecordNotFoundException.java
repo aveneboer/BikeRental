@@ -1,4 +1,4 @@
-/*
+
 package nl.anouk.bikerental.exceptions;
 
 public class RecordNotFoundException extends RuntimeException {
@@ -10,4 +10,4 @@ public class RecordNotFoundException extends RuntimeException {
 
     }
 
-}*/
+}
