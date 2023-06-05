@@ -28,15 +28,20 @@ public class Reservation {
     @Column(name = "end_date")
     private LocalDateTime endDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vehicle_id")
-    private Vehicle vehicle;
+    @Column(name = "type")
+    private String type;
+
+    @Column(name = "availability")
+    private boolean availability;
+
+
+/*
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReservationLine> reservationLines;
+    private List<ReservationLine> reservationLines;*/
 
 }

@@ -1,3 +1,4 @@
+/*
 package nl.anouk.bikerental.dtos;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,3 +16,4 @@ public class CarDto {
 
     private int passenger;
 }
+*/
