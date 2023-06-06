@@ -18,7 +18,6 @@ public class ReservationDto {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String type;
-    private boolean availability;
  /*   private CustomerDto customer;
     private List<ReservationLineDto> reservationLines;*/
 

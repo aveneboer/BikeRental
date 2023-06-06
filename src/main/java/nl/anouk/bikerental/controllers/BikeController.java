@@ -1,5 +1,3 @@
-/*
-
 package nl.anouk.bikerental.controllers;
 
 import jakarta.validation.Valid;
@@ -10,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +51,7 @@ public class BikeController {
 
         BikeDto dto = bikeService.addBike(bikeInputDto);
 
-        return ResponseEntity.created(null).body(dto);
+        return ResponseEntity.created(URI.create("/bikes/" + dto.getId())).body(dto);
     }
 
     @DeleteMapping("/bikes/{id}")
@@ -72,5 +71,4 @@ public class BikeController {
 
 
 }
-*/
 

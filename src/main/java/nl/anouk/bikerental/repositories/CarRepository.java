@@ -1,4 +1,3 @@
-/*
 package nl.anouk.bikerental.repositories;
 
 
@@ -10,14 +9,14 @@ import java.util.List;
 import java.util.Optional;
 @Repository
 public interface CarRepository extends JpaRepository<Car, Long> {
-    List<Car> findAllCarsByModelEqualsIgnoreCase(String Model);
+    List<Car> findAllCarsByModelEqualsIgnoreCase(String model);
 
-    List <Car> findAll();
+    List<Car> findAll();
 
     Optional<Car> findAllById(Long id);
 
-    Optional<Car> findAllByCapacity(int passenger);
+    List<Car> findAllByPassengerGreaterThanEqual(int passenger);
 
 }
-*/
+
 

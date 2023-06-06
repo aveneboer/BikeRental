@@ -1,4 +1,4 @@
-/*
+
 package nl.anouk.bikerental.services;
 
 import nl.anouk.bikerental.dtos.BikeDto;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class BikeService {
@@ -28,7 +29,6 @@ public class BikeService {
             throw new NoSuchElementException("Bike not found");
         }
     }
-}
 
     public List<BikeDto> getAllBikes() {
         List<Bike> bikeList = bikeRepository.findAll();
@@ -69,22 +69,34 @@ public class BikeService {
         }
     }
 
-   public BikeDto updateBike(Long id, BikeInputDto inputDto) {
-        if (bikeRepository.findAllById(id).isPresent()) {
+    public BikeDto updateBike(Long id, BikeInputDto inputDto) {
+        Optional<Bike> optionalBike = bikeRepository.findById(id);
 
-            Bike bike = bikeRepository.findAllById(id).get();
+        if (optionalBike.isPresent()) {
+            Bike existingBike = optionalBike.get();
 
-            Bike bike1 = transferToBike(inputDto);
-            bike1.setVehicleId(bike.getVehicleId());
+            // Update de velden alleen als ze zijn opgegeven in de inputDto
+            if (inputDto.getBrand() != null) {
+                existingBike.setBrand(inputDto.getBrand());
+            }
+            if (inputDto.getSize() != null) {
+                existingBike.setSize(inputDto.getSize());
+            }
+            if (inputDto.getRegistrationNo() != null) {
+                existingBike.setRegistrationNo(inputDto.getRegistrationNo());
+            }
+            if (inputDto.getHourlyPrice() != null) {
+                existingBike.setHourlyPrice(inputDto.getHourlyPrice());
+            }
 
-            bikeRepository.save(bike1);
+            bikeRepository.save(existingBike);
 
-            return transferToDto(bike1);
-
+            return transferToDto(existingBike);
         } else {
             throw new NoSuchElementException("Bike not found");
         }
     }
+
 
 
 
@@ -94,6 +106,7 @@ public class BikeService {
         bike.setSize(dto.getSize());
         bike.setBrand(dto.getBrand());
         bike.setRegistrationNo(dto.getRegistrationNo());
+        bike.setHourlyPrice(dto.getHourlyPrice());
 
         return bike;
     }
@@ -101,12 +114,13 @@ public class BikeService {
 
     public BikeDto transferToDto(Bike bike) {
         BikeDto dto = new BikeDto();
-
+        dto.setId(bike.getId());
         dto.setBrand(bike.getBrand());
         dto.setSize(bike.getSize());
         dto.setRegistrationNo(bike.getRegistrationNo());
+        dto.setHourlyPrice(bike.getHourlyPrice());
 
         return dto;
     }
 
-}*/
+}

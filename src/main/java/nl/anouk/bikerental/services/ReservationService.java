@@ -59,6 +59,7 @@ public class ReservationService {
         dto.setReservationId(reservation.getReservationId());
         dto.setStartDate(reservation.getStartDate());
         dto.setEndDate(reservation.getEndDate());
+        dto.setType(reservation.getType());
         return dto;
     }
 
@@ -66,6 +67,7 @@ public class ReservationService {
         Reservation reservation = new Reservation();
         reservation.setStartDate(inputDto.getStartDate());
         reservation.setEndDate(inputDto.getEndDate());
+        reservation.setType(inputDto.getType());
         return reservation;
     }
 

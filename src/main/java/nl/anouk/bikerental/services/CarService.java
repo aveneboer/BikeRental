@@ -1,5 +1,5 @@
-/*
 package nl.anouk.bikerental.services;
+
 import nl.anouk.bikerental.dtos.CarDto;
 import nl.anouk.bikerental.dtos.CarInputDto;
 import nl.anouk.bikerental.exceptions.RecordNotFoundException;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class CarService {
@@ -47,34 +48,42 @@ public class CarService {
 
         return transferToDto(car);
     }
-    public CarDto getCarByCapacity(int passenger) {
 
-        if (carRepository.findAllByCapacity(passenger).isPresent()) {
-            Car car = carRepository.findAllByCapacity(passenger).get();
-            CarDto dto = transferToDto(car);
-
+    public CarDto getCarByPassenger(int passenger) {
+        List<Car> cars = carRepository.findAllByPassengerGreaterThanEqual(passenger);
+        if (!cars.isEmpty()) {
+            Car car = cars.get(0); // Selecteer de eerste auto die aan de criteria voldoet
             return transferToDto(car);
         } else {
-            throw new RecordNotFoundException("No car was found");
+            throw new NoSuchElementException("No cars found for the given capacity");
         }
     }
 
-   public CarDto updateCar(Long id, CarInputDto inputDto) {
-        if (carRepository.findAllById(id).isPresent()) {
+    public CarDto updateCar(Long id, CarInputDto inputDto) {
+        Optional<Car> optionalCar = carRepository.findById(id);
 
-            Car car = carRepository.findAllById(id).get();
+        if (optionalCar.isPresent()) {
+            Car existingCar = optionalCar.get();
 
-            Car car1 = transferToCar(inputDto);
-            car1.setVehicleId(car.getVehicleId());
+            // Update de velden alleen als ze zijn opgegeven in de inputDto
+            if (inputDto.getModel() != null) {
+                existingCar.setModel(inputDto.getModel());
+            }
+            if (inputDto.getPassenger() != 0) {
+                existingCar.setPassenger(inputDto.getPassenger());
+            }
+            if (inputDto.getDayPrice() != null) {
+                existingCar.setDayPrice(inputDto.getDayPrice());
+            }
 
-            carRepository.save(car1);
+            carRepository.save(existingCar);
 
-            return transferToDto(car1);
-
+            return transferToDto(existingCar);
         } else {
             throw new NoSuchElementException("Car not found");
         }
     }
+
 
     public void deleteCar(@RequestBody Long id) {
         if (carRepository.existsById(id)) {
@@ -88,18 +97,21 @@ public class CarService {
         var car = new Car();
         car.setModel(dto.getModel());
         car.setPassenger(dto.getPassenger());
+        car.setDayPrice(dto.getDayPrice());
 
         return car;
     }
 
     public CarDto transferToDto(Car car) {
         CarDto dto = new CarDto();
-
+        dto.setId(car.getId());
         dto.setModel(car.getModel());
         dto.setPassenger(car.getPassenger());
+        dto.setDayPrice(car.getDayPrice());
 
         return dto;
     }
 
 }
-*/
+
+

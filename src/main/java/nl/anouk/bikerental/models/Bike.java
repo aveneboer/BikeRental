@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,9 +25,8 @@ public class Bike {
 
     @Column(name = "registration_numbers")
     private Long registrationNo;
-    @Column(name = "availability")
-    private boolean availability;
+
     @Column(name = "hourly_price")
-    private double hourlyPrice;
+    private BigDecimal hourlyPrice;
 
 }

@@ -31,10 +31,6 @@ public class Reservation {
     @Column(name = "type")
     private String type;
 
-    @Column(name = "availability")
-    private boolean availability;
-
-
 /*
 
     @ManyToOne

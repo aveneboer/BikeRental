@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -22,6 +24,6 @@ public class Car {
     @Column(name = "capacity")
     private int passenger;
     @Column(name = "day_price")
-    private double DayPrice;
+    private BigDecimal dayPrice;
 
 }

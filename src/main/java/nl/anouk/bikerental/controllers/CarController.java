@@ -1,4 +1,3 @@
-/*
 package nl.anouk.bikerental.controllers;
 
 import jakarta.validation.Valid;
@@ -39,10 +38,10 @@ public class CarController {
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/cars/{capacity}")
+    @GetMapping("/findCars/{capacity}")
     public ResponseEntity<CarDto> getCar(@PathVariable("capacity")int passenger) {
 
-        CarDto car = carService.getCarByCapacity(passenger);
+        CarDto car = carService.getCarByPassenger(passenger);
 
         return ResponseEntity.ok().body(car);
 
@@ -66,9 +65,8 @@ public class CarController {
 
             return ResponseEntity.created(uri).body(createdCar);
         }
-
-
     }
+
 
     @DeleteMapping("/cars/{id}")
     public ResponseEntity<Object> deleteCar(@PathVariable Long id) {
@@ -76,16 +74,14 @@ public class CarController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-
-*/
-/*    @PutMapping("/cars/{id}")
+  @PutMapping("/cars/{id}")
     public ResponseEntity<Object> updateCar(@PathVariable Long id, @Valid @RequestBody CarInputDto newCar) {
         CarDto dto = carService.updateCar(id, newCar);
 
         return ResponseEntity.ok().body(dto);
 
-    }*//*
+    }
 
 
 }
-*/
+

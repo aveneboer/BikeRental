@@ -16,7 +16,6 @@ public class ReservationInputDto {
     private LocalDateTime endDate;
     private Long customerId;
     private String type;
-    private boolean availability;
 
 /*    private List<ReservationLineInputDto> reservationLines;*/
 
