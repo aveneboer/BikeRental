@@ -16,7 +16,7 @@ public class BikeDto {
 
     private Long id;
     private String brand;
-    private String size;
+    private int quantity;
     private Long registrationNo;
     private BigDecimal hourlyPrice;
 

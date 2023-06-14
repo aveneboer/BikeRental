@@ -1,13 +1,14 @@
 package nl.anouk.bikerental.services;
-import nl.anouk.bikerental.dtos.ReservationDto;
-import nl.anouk.bikerental.dtos.ReservationInputDto;
+import nl.anouk.bikerental.dtos.*;
 import nl.anouk.bikerental.exceptions.RecordNotFoundException;
+import nl.anouk.bikerental.inputs.ReservationInputDto;
+import nl.anouk.bikerental.models.DtoMapper;
 import nl.anouk.bikerental.models.Reservation;
 import nl.anouk.bikerental.repositories.ReservationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 
 @Service
@@ -20,20 +21,18 @@ public class ReservationService {
 
     public List<ReservationDto> getAllReservations() {
         List<Reservation> reservations = reservationRepository.findAll();
-        return reservations.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+        return DtoMapper.mapReservationListToDtoList(reservations);
     }
 
     public ReservationDto getReservationById(Long id) {
         Reservation reservation = findReservationById(id);
-        return convertToDto(reservation);
+        return DtoMapper.mapReservationToDto(reservation);
     }
 
     public ReservationDto createReservation(ReservationInputDto reservationInputDto) {
-        Reservation reservation = convertToEntity(reservationInputDto);
+        Reservation reservation = DtoMapper.mapReservationInputDtoToEntity(reservationInputDto);
         Reservation savedReservation = reservationRepository.save(reservation);
-        return convertToDto(savedReservation);
+        return DtoMapper.mapReservationToDto(savedReservation);
     }
 
     public void deleteReservation(Long id) {
@@ -43,36 +42,26 @@ public class ReservationService {
 
     public ReservationDto updateReservation(Long id, ReservationInputDto newReservation) {
         Reservation reservation = findReservationById(id);
-        updateReservationFromDto(newReservation, reservation);
+
+        if (newReservation.getStartDate() != null) {
+            reservation.setStartDate(newReservation.getStartDate());
+        }
+
+        if (newReservation.getEndDate() != null) {
+            reservation.setEndDate(newReservation.getEndDate());
+        }
+
+        if (newReservation.getType() != null) {
+            reservation.setType(newReservation.getType());
+        }
+
         Reservation updatedReservation = reservationRepository.save(reservation);
-        return convertToDto(updatedReservation);
+        return DtoMapper.mapReservationToDto(updatedReservation);
     }
 
     private Reservation findReservationById(Long id) {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Reservation not found"));
     }
-
-
-    private ReservationDto convertToDto(Reservation reservation) {
-        ReservationDto dto = new ReservationDto();
-        dto.setReservationId(reservation.getReservationId());
-        dto.setStartDate(reservation.getStartDate());
-        dto.setEndDate(reservation.getEndDate());
-        dto.setType(reservation.getType());
-        return dto;
-    }
-
-    private Reservation convertToEntity(ReservationInputDto inputDto) {
-        Reservation reservation = new Reservation();
-        reservation.setStartDate(inputDto.getStartDate());
-        reservation.setEndDate(inputDto.getEndDate());
-        reservation.setType(inputDto.getType());
-        return reservation;
-    }
-
-    private void updateReservationFromDto(ReservationInputDto dto, Reservation reservation) {
-        reservation.setStartDate(dto.getStartDate());
-        reservation.setEndDate(dto.getEndDate());
-    }
 }
+

@@ -1,4 +1,4 @@
-package nl.anouk.bikerental.dtos;
+package nl.anouk.bikerental.inputs;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerDto {
-    private Long customerId;
+public class CustomerInputDto {
 
     private String firstName;
 

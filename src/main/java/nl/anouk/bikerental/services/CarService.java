@@ -1,12 +1,11 @@
 package nl.anouk.bikerental.services;
 
 import nl.anouk.bikerental.dtos.CarDto;
-import nl.anouk.bikerental.dtos.CarInputDto;
-import nl.anouk.bikerental.exceptions.RecordNotFoundException;
+import nl.anouk.bikerental.inputs.CarInputDto;
 import nl.anouk.bikerental.models.Car;
+import nl.anouk.bikerental.models.DtoMapper;
 import nl.anouk.bikerental.repositories.CarRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,19 +22,19 @@ public class CarService {
 
     public List<CarDto> getAllCars() {
         List<Car> carList = carRepository.findAll();
-        return transferCarListToDtoList(carList);
+        return DtoMapper.mapCarListToDtoList(carList);
     }
 
     public List<CarDto> getAllCarsByModel(String model) {
         List<Car> carList = carRepository.findAllCarsByModelEqualsIgnoreCase(model);
-        return transferCarListToDtoList(carList);
+        return DtoMapper.mapCarListToDtoList(carList);
     }
 
     public List<CarDto> transferCarListToDtoList(List<Car> cars) {
         List<CarDto> carDtoList = new ArrayList<>();
 
         for (Car car : cars) {
-            CarDto dto = transferToDto(car);
+            CarDto dto = DtoMapper.mapCarToDto(car);
             carDtoList.add(dto);
         }
 
@@ -43,17 +42,17 @@ public class CarService {
     }
 
     public CarDto addCar(CarInputDto dto) {
-        Car car = transferToCar(dto);
+        Car car = DtoMapper.mapCarInputDtoToEntity(dto);
         carRepository.save(car);
 
-        return transferToDto(car);
+        return DtoMapper.mapCarToDto(car);
     }
 
     public CarDto getCarByPassenger(int passenger) {
         List<Car> cars = carRepository.findAllByPassengerGreaterThanEqual(passenger);
         if (!cars.isEmpty()) {
-            Car car = cars.get(0); // Selecteer de eerste auto die aan de criteria voldoet
-            return transferToDto(car);
+            Car car = cars.get(0);
+            return DtoMapper.mapCarToDto(car);
         } else {
             throw new NoSuchElementException("No cars found for the given capacity");
         }
@@ -78,40 +77,25 @@ public class CarService {
 
             carRepository.save(existingCar);
 
-            return transferToDto(existingCar);
+            return DtoMapper.mapCarToDto(existingCar);
         } else {
             throw new NoSuchElementException("Car not found");
         }
     }
 
-
-    public void deleteCar(@RequestBody Long id) {
+    public void deleteCar(Long id) {
         if (carRepository.existsById(id)) {
             carRepository.deleteById(id);
         } else {
             throw new NoSuchElementException("Car not found");
         }
     }
+    public CarDto getCarDto() {
+        Car car = carRepository.findCar();
 
-    public Car transferToCar(CarInputDto dto) {
-        var car = new Car();
-        car.setModel(dto.getModel());
-        car.setPassenger(dto.getPassenger());
-        car.setDayPrice(dto.getDayPrice());
+        CarDto carDto = new CarDto();
+        carDto.setDayPrice(car.getDayPrice());
 
-        return car;
+        return carDto;
     }
-
-    public CarDto transferToDto(Car car) {
-        CarDto dto = new CarDto();
-        dto.setId(car.getId());
-        dto.setModel(car.getModel());
-        dto.setPassenger(car.getPassenger());
-        dto.setDayPrice(car.getDayPrice());
-
-        return dto;
-    }
-
 }
-
-

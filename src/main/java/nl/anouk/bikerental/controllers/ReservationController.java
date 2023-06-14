@@ -1,7 +1,7 @@
 package nl.anouk.bikerental.controllers;
 import jakarta.validation.Valid;
 import nl.anouk.bikerental.dtos.ReservationDto;
-import nl.anouk.bikerental.dtos.ReservationInputDto;
+import nl.anouk.bikerental.inputs.ReservationInputDto;
 import nl.anouk.bikerental.services.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +41,7 @@ public class ReservationController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/reservations/{id}")
+    @PatchMapping("/reservations/{id}")
     public ResponseEntity<Object> updateReservation(@PathVariable Long id, @Valid @RequestBody ReservationInputDto newReservation) {
         ReservationDto dto = reservationService.updateReservation(id, newReservation);
         return ResponseEntity.ok().body(dto);

@@ -1,6 +1,6 @@
 
 
-package nl.anouk.bikerental.dtos;
+package nl.anouk.bikerental.inputs;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,5 +19,6 @@ public class CarInputDto {
 
     private int passenger;
     private BigDecimal dayPrice;
+    private int quantity;
 }
 

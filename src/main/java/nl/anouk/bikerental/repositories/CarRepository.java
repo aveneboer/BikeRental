@@ -1,8 +1,10 @@
 package nl.anouk.bikerental.repositories;
 
 
+import nl.anouk.bikerental.models.Bike;
 import nl.anouk.bikerental.models.Car;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,6 +19,8 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     List<Car> findAllByPassengerGreaterThanEqual(int passenger);
 
+    @Query("SELECT b FROM Car b")
+    Car findCar();
 }
 
 

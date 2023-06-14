@@ -1,6 +1,5 @@
-package nl.anouk.bikerental.dtos;
+package nl.anouk.bikerental.inputs;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReservationLineDto {
-    private Long reservationLineId;
+public class ReservationLineInputDto {
     private LocalDateTime dateOrdered;
     private String confirmation;
     private String status;

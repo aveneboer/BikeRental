@@ -1,5 +1,5 @@
 
-package nl.anouk.bikerental.dtos;
+package nl.anouk.bikerental.inputs;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 
 public class BikeInputDto {
     private String brand;
-    private String size;
+    private int quantity;
     private Long registrationNo;
     private BigDecimal hourlyPrice;
 

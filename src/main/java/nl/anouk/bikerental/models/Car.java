@@ -25,5 +25,8 @@ public class Car {
     private int passenger;
     @Column(name = "day_price")
     private BigDecimal dayPrice;
+    @Column
+    private int quantity;
+
 
 }

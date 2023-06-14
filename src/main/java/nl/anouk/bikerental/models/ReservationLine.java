@@ -38,14 +38,13 @@ public class ReservationLine {
 
     @Column(name = "total_price")
     private double totalPrice;
-/*
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reservation_id", insertable = false, updatable = false)
     private Reservation reservation;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
-    private Customer customer;*/
+   @ManyToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "customer_id")
+   private Customer customer;
 
 }

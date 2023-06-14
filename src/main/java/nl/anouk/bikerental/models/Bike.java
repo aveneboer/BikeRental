@@ -20,8 +20,8 @@ public class Bike {
 
     @Column(name = "brands")
     private String brand;
-    @Column(name = "sizes")
-    private String size;
+    @Column(name = "quantity")
+    private int quantity;
 
     @Column(name = "registration_numbers")
     private Long registrationNo;

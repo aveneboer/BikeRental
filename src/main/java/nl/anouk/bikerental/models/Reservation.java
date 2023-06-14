@@ -31,13 +31,11 @@ public class Reservation {
     @Column(name = "type")
     private String type;
 
-/*
-
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-   @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReservationLine> reservationLines;*/
+   @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ReservationLine reservationLine;
 
 }

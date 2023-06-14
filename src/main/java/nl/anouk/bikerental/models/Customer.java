@@ -34,9 +34,9 @@ public class Customer {
     @Column(name = "address")
     private String address;
 
-/*    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+   @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReservationLine> reservationLines;*/
+    private List<ReservationLine> reservationLines;
 }

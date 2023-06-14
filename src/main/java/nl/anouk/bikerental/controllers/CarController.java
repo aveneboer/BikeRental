@@ -2,7 +2,7 @@ package nl.anouk.bikerental.controllers;
 
 import jakarta.validation.Valid;
 import nl.anouk.bikerental.dtos.CarDto;
-import nl.anouk.bikerental.dtos.CarInputDto;
+import nl.anouk.bikerental.inputs.CarInputDto;
 import nl.anouk.bikerental.services.CarService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

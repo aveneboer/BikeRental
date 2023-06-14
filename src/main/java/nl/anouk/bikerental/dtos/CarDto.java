@@ -19,5 +19,6 @@ public class CarDto {
     private int passenger;
 
     private BigDecimal dayPrice;
+    private int quantity;
 }
 
