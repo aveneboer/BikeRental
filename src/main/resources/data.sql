@@ -22,7 +22,7 @@ VALUES
     ('2023-06-20 14:00:00', '2023-06-23 12:00:00', 'Car', 2);
 
 -- ReservationLine
-INSERT INTO reservation_lines (date_ordered, confirmation, status, payment_method, customer_id)
+INSERT INTO reservation_lines (date_ordered, confirmation, status, payment_method, duration, total_price, reservation_id)
 VALUES
-    ('2023-06-14 10:00:00', 'ABCD1234', 'Confirmed', 'Credit Card', 1),
-    ('2023-06-19 16:30:00', 'EFGH5678', 'Pending', 'Cash', 2);
+    ('2023-06-14 10:00:00', 'ABCD1234', 'Confirmed', 'Credit Card', 3, 50, 1),
+    ('2023-06-19 16:30:00', 'EFGH5678', 'Pending', 'Cash', 2, 6, 2);

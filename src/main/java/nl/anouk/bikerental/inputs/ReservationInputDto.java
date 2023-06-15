@@ -3,7 +3,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import nl.anouk.bikerental.models.ReservationLine;
+import nl.anouk.bikerental.dtos.CustomerDto;
+
 
 import java.time.LocalDateTime;
 
@@ -17,8 +18,9 @@ public class ReservationInputDto {
 
     private Long customerId;
     private String type;
-    private ReservationLine reservationLine;
+    private CustomerDto customer;
 
+ /*   private ReservationLineDto reservationLine;*/
 
 
 }

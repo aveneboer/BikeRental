@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nl.anouk.bikerental.models.Customer;
-import nl.anouk.bikerental.models.ReservationLine;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,11 +17,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReservationDto {
-    private Long reservationId;
+    public Long reservationId;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private String type;
     private CustomerDto customer;
-    private ReservationLineDto reservationLine;
+/*    private ReservationLineDto reservationLine;*/
+
 
 }

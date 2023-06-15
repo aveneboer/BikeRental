@@ -34,8 +34,10 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
+/*
 
    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private ReservationLine reservationLine;
+*/
 
 }

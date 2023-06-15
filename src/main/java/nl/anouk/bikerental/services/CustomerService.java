@@ -26,13 +26,13 @@ public class CustomerService {
     public CustomerDto getCustomerById(Long id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Customer not found with id: " + id));
-        return DtoMapper.mapCustomerToDto(customer);
+        return DtoMapper.mapCustomerToDto(customer, true);
     }
 
     public CustomerDto createCustomer(CustomerInputDto customerInputDto) {
         Customer customer = DtoMapper.mapDtoToCustomer(customerInputDto);
         Customer savedCustomer = customerRepository.save(customer);
-        return DtoMapper.mapCustomerToDto(savedCustomer);
+        return DtoMapper.mapCustomerToDto(savedCustomer, false);
     }
 
     public void deleteCustomer(Long id) {
@@ -54,6 +54,6 @@ public class CustomerService {
         existingCustomer.setAddress(newCustomer.getAddress());
 
         Customer updatedCustomer = customerRepository.save(existingCustomer);
-        return DtoMapper.mapCustomerToDto(updatedCustomer);
+        return DtoMapper.mapCustomerToDto(updatedCustomer, false);
     }
 }

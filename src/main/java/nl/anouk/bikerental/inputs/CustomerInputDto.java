@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import nl.anouk.bikerental.dtos.ReservationDto;
+
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,5 +24,7 @@ public class CustomerInputDto {
     private String email;
 
     private String address;
+
+    private List<ReservationDto> reservations;
 
 }

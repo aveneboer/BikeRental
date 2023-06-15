@@ -84,11 +84,13 @@ public class DtoMapper {
 
     public static List<CustomerDto> mapCustomerListToDtoList(List<Customer> customers) {
         return customers.stream()
-                .map(nl.anouk.bikerental.models.DtoMapper::mapCustomerToDto)
+                .map(customer -> mapCustomerToDto(customer, true))  // Gebruik includeReservations=true
                 .collect(Collectors.toList());
     }
 
-    public static CustomerDto mapCustomerToDto(Customer customer) {
+
+
+    public static CustomerDto mapCustomerToDto(Customer customer, boolean includeReservations) {
         CustomerDto dto = new CustomerDto();
         dto.setCustomerId(customer.getCustomerId());
         dto.setFirstName(customer.getFirstName());
@@ -96,6 +98,37 @@ public class DtoMapper {
         dto.setPhoneNo(customer.getPhoneNo());
         dto.setEmail(customer.getEmail());
         dto.setAddress(customer.getAddress());
+
+        if (includeReservations) {
+            List<ReservationDto> reservationDtos = new ArrayList<>();
+            /*   List<ReservationLineDto> reservationLineDtos = new ArrayList<>();*/
+
+            for (Reservation reservation : customer.getReservations()) {
+                ReservationDto reservationDto = new ReservationDto();
+                reservationDto.setReservationId(reservation.getReservationId());
+                reservationDto.setStartDate(reservation.getStartDate());
+                reservationDto.setEndDate(reservation.getEndDate());
+                reservationDto.setType(reservation.getType());
+
+                reservationDtos.add(reservationDto);
+            }
+            /*for (ReservationLine reservationLine : reservation.getCustomer().getReservationLines()) {
+                ReservationLineDto reservationLineDto = new ReservationLineDto();
+                reservationLineDto.setReservationLineId(reservationLine.getReservationLineId());
+                reservationLineDto.setDateOrdered(reservationLine.getDateOrdered());
+                reservationLineDto.setConfirmation(reservationLine.getConfirmation());
+                reservationLine.setStatus(reservationLine.getStatus());
+                reservationLine.setPaymentMethod(reservationLine.getPaymentMethod());
+                reservationLine.setDuration(reservationLine.getDuration());
+                reservationLine.setTotalPrice(reservationLine.getTotalPrice());
+
+                reservationLineDtos.add(reservationLineDto);*/
+
+
+            dto.setReservations(reservationDtos);
+            /* dto.setReservationLines(reservationLineDtos);*/
+
+        }
         return dto;
     }
 
@@ -118,6 +151,32 @@ public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inp
 
 }
 
+
+
+    public static ReservationDto mapReservationToDto(Reservation reservation) {
+        ReservationDto dto = new ReservationDto();
+        dto.setReservationId(reservation.getReservationId());
+        dto.setStartDate(reservation.getStartDate());
+        dto.setEndDate(reservation.getEndDate());
+        dto.setType(reservation.getType());
+
+        CustomerDto customerDto = mapCustomerToDto(reservation.getCustomer(), false);
+        dto.setCustomer(customerDto);
+/*
+
+        ReservationLineDto reservationLineDto = mapReservationLineToDto(reservation.getReservationLine());
+        dto.setReservationLine(reservationLineDto);
+*/
+
+        return dto;
+    }
+
+    public static List<ReservationDto> mapReservationListToDtoList(List<Reservation> reservations) {
+        return reservations.stream()
+                .map(nl.anouk.bikerental.models.DtoMapper::mapReservationToDto)
+                .collect(Collectors.toList());
+    }
+
     public static ReservationLine mapReservationLineInputDtoToEntity(ReservationLineInputDto inputDto) {
         ReservationLine reservationLine = new ReservationLine();
         reservationLine.setDateOrdered(inputDto.getDateOrdered());
@@ -130,29 +189,6 @@ public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inp
         return reservationLine;
     }
 
-
-
-    public static ReservationDto mapReservationToDto(Reservation reservation) {
-        ReservationDto dto = new ReservationDto();
-        dto.setReservationId(reservation.getReservationId());
-        dto.setStartDate(reservation.getStartDate());
-        dto.setEndDate(reservation.getEndDate());
-        dto.setType(reservation.getType());
-
-        CustomerDto customerDto = mapCustomerToDto(reservation.getCustomer());
-        dto.setCustomer(customerDto);
-
-        ReservationLineDto reservationLineDto = mapReservationLineToDto(reservation.getReservationLine());
-        dto.setReservationLine(reservationLineDto);
-
-        return dto;
-    }
-
-    public static List<ReservationDto> mapReservationListToDtoList(List<Reservation> reservations) {
-        return reservations.stream()
-                .map(nl.anouk.bikerental.models.DtoMapper::mapReservationToDto)
-                .collect(Collectors.toList());
-    }
 
     public static ReservationLineDto mapReservationLineToDto(ReservationLine reservationLine) {
         ReservationLineDto dto = new ReservationLineDto();
@@ -167,6 +203,20 @@ public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inp
 
         return dto;
     }
+    public static ReservationLine mapDtoToReservationLine(ReservationLineInputDto reservationLineInputDto) {
+        ReservationLine reservationLine = new ReservationLine();
+
+        reservationLine.setDateOrdered(reservationLineInputDto.getDateOrdered());
+        reservationLine.setConfirmation(reservationLineInputDto.getConfirmation());
+        reservationLine.setStatus(reservationLineInputDto.getStatus());
+        reservationLine.setPaymentMethod(reservationLineInputDto.getPaymentMethod());
+        reservationLine.setDuration(reservationLineInputDto.getDuration());
+        reservationLine.setTotalPrice(reservationLineInputDto.getTotalPrice());
+
+        return reservationLine;
+    }
+
+
 
 
     public static List<ReservationLineDto> mapReservationLineListToDtoList(List<ReservationLine> reservationLines) {
@@ -174,5 +224,4 @@ public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inp
                 .map(nl.anouk.bikerental.models.DtoMapper::mapReservationLineToDto)
                 .collect(Collectors.toList());
     }
-
 }

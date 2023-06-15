@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,5 +23,6 @@ public class CustomerDto {
     private String email;
 
     private String address;
+    private List<ReservationDto> reservations;
 
 }

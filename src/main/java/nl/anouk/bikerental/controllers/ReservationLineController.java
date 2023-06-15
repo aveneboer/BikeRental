@@ -1,3 +1,4 @@
+
 package nl.anouk.bikerental.controllers;
 
 import jakarta.validation.Valid;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
     @RestController
-    @RequestMapping("/reservation-lines")
     public class ReservationLineController {
         private final ReservationLineService reservationLineService;
         private final ReservationService reservationService;
@@ -23,27 +23,24 @@ import java.util.List;
             this.reservationService = reservationService;
         }
 
-        @GetMapping("/{id}")
+        @GetMapping("reservationlines/{id}")
         public ResponseEntity<ReservationLineDto> getReservationLine(@PathVariable("id") Long id) {
             ReservationLineDto reservationLine = reservationLineService.getReservationLineById(id);
             return ResponseEntity.ok().body(reservationLine);
         }
-        @PostMapping
+
+        @PostMapping("/reservationline")
         public ResponseEntity<Object> createReservationLine(@Valid @RequestBody ReservationLineInputDto reservationLineInputDto, @RequestParam Long reservationId) {
             ReservationDto reservationDto = reservationService.getReservationById(reservationId);
             ReservationLineDto createdReservationLine = reservationLineService.createReservationLine(reservationDto, reservationLineInputDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdReservationLine);
         }
-        @PostMapping("/reservations")
-        public ResponseEntity<Object> createReservation(@Valid @RequestBody ReservationInputDto reservationInputDto) {
-            ReservationDto dto = reservationService.createReservation(reservationInputDto);
-            return ResponseEntity.created(null).body(dto);
-        }
 
 
-        @GetMapping
+        @GetMapping("/reservationlines")
         public ResponseEntity<List<ReservationLineDto>> getAllReservationLines() {
             List<ReservationLineDto> dtos = reservationLineService.getAllReservationLines();
             return ResponseEntity.ok().body(dtos);
         }
     }
+

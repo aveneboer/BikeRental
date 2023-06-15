@@ -1,3 +1,4 @@
+
 package nl.anouk.bikerental.models;
 
 import jakarta.persistence.*;
@@ -42,9 +43,5 @@ public class ReservationLine {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reservation_id", insertable = false, updatable = false)
     private Reservation reservation;
-
-   @ManyToOne(fetch = FetchType.LAZY)
-   @JoinColumn(name = "customer_id")
-   private Customer customer;
 
 }
