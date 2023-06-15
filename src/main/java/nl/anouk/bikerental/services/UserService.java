@@ -48,6 +48,7 @@ public class UserService {
     public String createUser(UserDto userDto) {
         String randomString = RandomStringGenerator.generateAlphaNumeric(20);
         userDto.setApikey(randomString);
+        //Het wachtwoord moet hier nog encoded worden, nog implementeren//
         User newUser = userRepository.save(toUser(userDto));
         return newUser.getUsername();
     }
@@ -59,6 +60,7 @@ public class UserService {
     public void updateUser(String username, UserDto newUser) {
         if (!userRepository.existsById(username)) throw new RecordNotFoundException("User with " + username + "not found");
         User user = userRepository.findById(username).get();
+        //Het wachtwoord moet hier nog encoded worden, nog implementeren//
         user.setPassword(newUser.getPassword());
         userRepository.save(user);
     }
@@ -89,7 +91,7 @@ public class UserService {
     public static UserDto fromUser(User user){
 
         var dto = new UserDto();
-
+        //Het wachtwoord moet hier nog encoded worden, nog implementeren//
         dto.username = user.getUsername();
         dto.password = user.getPassword();
         dto.enabled = user.isEnabled();
@@ -103,7 +105,7 @@ public class UserService {
     public User toUser(UserDto userDto) {
 
         var user = new User();
-
+        //Het wachtwoord moet hier nog encoded worden, nog implementeren//
         user.setUsername(userDto.getUsername());
         user.setPassword(userDto.getPassword());
         user.setEnabled(userDto.getEnabled());
