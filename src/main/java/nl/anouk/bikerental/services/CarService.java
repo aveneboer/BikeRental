@@ -1,3 +1,4 @@
+
 package nl.anouk.bikerental.services;
 
 import nl.anouk.bikerental.dtos.CarDto;
@@ -64,6 +65,7 @@ public class CarService {
         if (optionalCar.isPresent()) {
             Car existingCar = optionalCar.get();
 
+
             // Update de velden alleen als ze zijn opgegeven in de inputDto
             if (inputDto.getModel() != null) {
                 existingCar.setModel(inputDto.getModel());
@@ -99,3 +101,4 @@ public class CarService {
         return carDto;
     }
 }
+

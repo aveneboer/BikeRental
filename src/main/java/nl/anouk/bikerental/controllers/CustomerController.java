@@ -1,5 +1,6 @@
 package nl.anouk.bikerental.controllers;
 
+<<<<<<< HEAD
 import jakarta.validation.Valid;
 import nl.anouk.bikerental.dtos.CustomerDto;
 import nl.anouk.bikerental.inputs.CustomerInputDto;
@@ -46,4 +47,7 @@ public class CustomerController {
         CustomerDto dto = customerService.updateCustomer(id, newCustomer);
         return ResponseEntity.ok().body(dto);
     }
+=======
+public class CustomerController {
+>>>>>>> main
 }

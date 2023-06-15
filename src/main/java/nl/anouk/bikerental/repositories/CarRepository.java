@@ -1,7 +1,6 @@
+
 package nl.anouk.bikerental.repositories;
 
-
-import nl.anouk.bikerental.models.Bike;
 import nl.anouk.bikerental.models.Car;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

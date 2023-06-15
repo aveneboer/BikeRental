@@ -18,6 +18,9 @@ public interface BikeRepository extends JpaRepository<Bike, Long> {
     Optional<Bike> findById(Long id);
     @Query("SELECT b FROM Bike b")
     Bike findBike();
+
+    Optional<Bike> findAllById(Long id);
+
 }
 
 

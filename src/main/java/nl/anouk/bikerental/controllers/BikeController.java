@@ -1,3 +1,4 @@
+
 package nl.anouk.bikerental.controllers;
 
 import jakarta.validation.Valid;
@@ -20,21 +21,6 @@ public class BikeController {
         this.bikeService = bikeService;
     }
 
-
-    @GetMapping("/bikes")
-    public ResponseEntity<List<BikeDto>> getAllBikes(@RequestParam(value = "brand", required = false) Optional<String> brand) {
-
-        List<BikeDto> dtos;
-
-        if (brand.isEmpty()) {
-            dtos = bikeService.getAllBikes();
-
-        } else {
-
-            dtos = bikeService.getAllBikesByBrand(brand.get());
-        }
-        return ResponseEntity.ok().body(dtos);
-    }
 
 
     @GetMapping("/bikes/{id}")
