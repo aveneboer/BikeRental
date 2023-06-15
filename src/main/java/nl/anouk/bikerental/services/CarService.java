@@ -1,4 +1,4 @@
-/*
+
 package nl.anouk.bikerental.services;
 import nl.anouk.bikerental.dtos.CarDto;
 import nl.anouk.bikerental.dtos.CarInputDto;
@@ -65,7 +65,6 @@ public class CarService {
             Car car = carRepository.findAllById(id).get();
 
             Car car1 = transferToCar(inputDto);
-            car1.setVehicleId(car.getVehicleId());
 
             carRepository.save(car1);
 
@@ -102,4 +101,4 @@ public class CarService {
     }
 
 }
-*/
+

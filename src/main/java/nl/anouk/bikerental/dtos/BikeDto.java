@@ -1,4 +1,4 @@
-/*
+
 package nl.anouk.bikerental.dtos;
 
 import lombok.AllArgsConstructor;
@@ -19,4 +19,4 @@ public class BikeDto {
 
 }
 
-*/
+

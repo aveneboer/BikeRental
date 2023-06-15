@@ -1,4 +1,4 @@
-/*
+
 package nl.anouk.bikerental.repositories;
 
 
@@ -19,5 +19,5 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     Optional<Car> findAllByCapacity(int passenger);
 
 }
-*/
+
 

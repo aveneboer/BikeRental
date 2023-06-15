@@ -1,4 +1,5 @@
 package nl.anouk.bikerental.controllers;
+
 import jakarta.validation.Valid;
 import nl.anouk.bikerental.dtos.ReservationDto;
 import nl.anouk.bikerental.dtos.ReservationInputDto;
@@ -45,5 +46,6 @@ public class ReservationController {
     public ResponseEntity<Object> updateReservation(@PathVariable Long id, @Valid @RequestBody ReservationInputDto newReservation) {
         ReservationDto dto = reservationService.updateReservation(id, newReservation);
         return ResponseEntity.ok().body(dto);
-    }
-}
+    }}
+
+
