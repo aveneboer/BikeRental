@@ -1,3 +1,4 @@
+
 package nl.anouk.bikerental.services;
 
 import nl.anouk.bikerental.dtos.CarDto;
@@ -75,6 +76,8 @@ public class CarService {
                 existingCar.setDayPrice(inputDto.getDayPrice());
             }
 
+
+
             carRepository.save(existingCar);
 
             return DtoMapper.mapCarToDto(existingCar);
@@ -99,3 +102,4 @@ public class CarService {
         return carDto;
     }
 }
+

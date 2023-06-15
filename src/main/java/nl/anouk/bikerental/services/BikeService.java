@@ -65,6 +65,7 @@ public class BikeService {
         if (optionalBike.isPresent()) {
             Bike existingBike = optionalBike.get();
 
+
             // Update the fields only if they are provided in the inputDto
             if (inputDto.getBrand() != null) {
                 existingBike.setBrand(inputDto.getBrand());
@@ -78,6 +79,7 @@ public class BikeService {
             if (inputDto.getHourlyPrice() != null) {
                 existingBike.setHourlyPrice(inputDto.getHourlyPrice());
             }
+
 
             bikeRepository.save(existingBike);
 
@@ -95,4 +97,16 @@ public class BikeService {
 
         return bikeDto;
     }
+
+    public BikeDto transferToDto(Bike bike) {
+        BikeDto dto = new BikeDto();
+
+        dto.setBrand(bike.getBrand());
+        dto.setQuantity(bike.getQuantity());
+        dto.setRegistrationNo(bike.getRegistrationNo());
+        dto.setHourlyPrice(bike.getHourlyPrice());
+
+        return dto;
+    }
+
 }

@@ -2,6 +2,7 @@
 
 package nl.anouk.bikerental.inputs;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
