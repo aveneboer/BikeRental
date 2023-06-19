@@ -6,6 +6,9 @@ import nl.anouk.bikerental.models.Authority;
 import nl.anouk.bikerental.models.User;
 import nl.anouk.bikerental.repositories.UserRepository;
 import nl.anouk.bikerental.utils.RandomStringGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,9 +19,14 @@ import java.util.Set;
 @Service
 public class UserService {
   private final UserRepository userRepository;
+  @Lazy
+  @Autowired
+ private PasswordEncoder passwordEncoder;
+
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+
     }
 
     public List<UserDto> getUsers() {
@@ -60,8 +68,7 @@ public class UserService {
     public void updateUser(String username, UserDto newUser) {
         if (!userRepository.existsById(username)) throw new RecordNotFoundException("User with " + username + "not found");
         User user = userRepository.findById(username).get();
-        //Het wachtwoord moet hier nog encoded worden, nog implementeren//
-        user.setPassword(newUser.getPassword());
+        user.setPassword(passwordEncoder.encode(newUser.getPassword()));
         userRepository.save(user);
     }
 
@@ -107,7 +114,7 @@ public class UserService {
         var user = new User();
         //Het wachtwoord moet hier nog encoded worden, nog implementeren//
         user.setUsername(userDto.getUsername());
-        user.setPassword(userDto.getPassword());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setEnabled(userDto.getEnabled());
         user.setApikey(userDto.getApikey());
         user.setEmail(userDto.getEmail());

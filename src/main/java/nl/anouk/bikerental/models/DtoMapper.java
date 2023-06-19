@@ -141,6 +141,7 @@ public class DtoMapper {
         customer.setAddress(dto.getAddress());
         return customer;
     }
+
 public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inputDto) {
         Reservation reservation = new Reservation();
         reservation.setType(inputDto.getType());
@@ -200,6 +201,11 @@ public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inp
             dto.setPaymentMethod(reservationLine.getPaymentMethod());
             dto.setDuration(reservationLine.getDuration());
             dto.setTotalPrice(reservationLine.getTotalPrice());
+
+        if (reservationLine.getReservation() != null) {
+            ReservationDto reservationDto = mapReservationToDto(reservationLine.getReservation());
+            dto.setReservation(reservationDto);
+        }
 
         return dto;
     }

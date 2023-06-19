@@ -4,7 +4,6 @@ import nl.anouk.bikerental.filter.JwtRequestFilter;
 import nl.anouk.bikerental.services.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -58,13 +57,39 @@ private final CustomUserDetailsService customUserDetailsService;
                 .httpBasic().disable()
                 .cors().and()
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                .requestMatchers(HttpMethod.GET,"/users").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST,"/users/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
-                /*voeg de antmatchers toe voor admin(post en delete) en user (overige)*/
-                .requestMatchers("/authenticated").authenticated()
-                .requestMatchers("/authenticate").permitAll()/*allen dit punt mag toegankelijk zijn voor niet ingelogde gebruikers*/
+
+                .requestMatchers("/**").permitAll() // alleen nu om methodes te kunnen draaien in Postman
+
+//                .requestMatchers(HttpMethod.POST, "/users").permitAll()
+//                .requestMatchers(HttpMethod.GET,"/users").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.POST,"/users/**").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
+//
+//                .requestMatchers(HttpMethod.GET, "/bikes").permitAll()
+//                .requestMatchers(HttpMethod.GET,"/bike/{id}").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.POST,"/bikes").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.DELETE, "/bikes/{id}").hasRole("ADMIN")
+//
+//                .requestMatchers(HttpMethod.GET,"/customers").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.GET,"/reservations").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.POST,"/customers/**").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
+//                .requestMatchers(HttpMethod.POST, "/").permitAll()
+//
+//                .requestMatchers(HttpMethod.GET,"/bikes/all").hasRole("USER")
+//                .requestMatchers(HttpMethod.GET,"/cars").hasRole("USER")
+//
+//                .requestMatchers(HttpMethod.POST,"/reservation/{id}").hasRole("USER")
+//                .requestMatchers(HttpMethod.DELETE, "/reservation/{id}").hasRole("USER")
+//
+//                .requestMatchers(HttpMethod.GET,"/reservations").hasRole("USER")
+//                .requestMatchers(HttpMethod.POST,"/reservation").hasRole("USER")
+//                .requestMatchers(HttpMethod.DELETE, "/reservation/{id}").hasRole("USER")
+//                .requestMatchers(HttpMethod.PATCH, "/reservations/{id}").hasRole("USER")
+//
+//              //  .requestMatchers("/**").authenticated() is een wildcard, je mag overal bij zolang je maar ingelogd bent ongeacht user of admin
+//                .requestMatchers("/authenticated").authenticated()
+//                .requestMatchers("/authenticate").permitAll()/*allen dit punt mag toegankelijk zijn voor niet ingelogde gebruikers*/
                 .anyRequest().denyAll()
                 .and()
                 .sessionManagement()

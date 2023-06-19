@@ -24,6 +24,8 @@ public class CarController {
         this.carService = carService;
     }
 
+
+
     @GetMapping("/cars")
     public ResponseEntity<List<CarDto>> getAllCars(@RequestParam(value = "model", required = false) Optional<String> model) {
 
@@ -47,8 +49,6 @@ public class CarController {
         return ResponseEntity.ok().body(car);
 
     }
-
-
 
     @PostMapping("/addCar")
     public ResponseEntity<Object> addCar(@Valid @RequestBody CarInputDto carInputDto, BindingResult br) {
@@ -77,8 +77,7 @@ public class CarController {
     }
 
 
-
-    @PutMapping("/cars/{id}")
+    @PatchMapping("/cars/{id}")
     public ResponseEntity<Object> updateCar(@PathVariable Long id, @Valid @RequestBody CarInputDto newCar){
             CarDto dto = carService.updateCar(id, newCar);
 

@@ -24,13 +24,13 @@ public class ReservationController {
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/reservations/{id}")
+    @GetMapping("/reservation/{id}")
     public ResponseEntity<ReservationDto> getReservation(@PathVariable("id") Long id) {
         ReservationDto reservation = reservationService.getReservationById(id);
         return ResponseEntity.ok().body(reservation);
     }
 
-    @PostMapping("/reservations")
+    @PostMapping("/reservation")
     public ResponseEntity<Object> createReservation(@Valid @RequestBody ReservationInputDto reservationInputDto) {
         ReservationDto dto = reservationService.createReservation(reservationInputDto);
         return ResponseEntity.created(null).body(dto);

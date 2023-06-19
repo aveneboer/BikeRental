@@ -4,13 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import nl.anouk.bikerental.models.Customer;
-
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Setter
 @Getter
@@ -22,7 +17,7 @@ public class ReservationDto {
     private LocalDateTime endDate;
     private String type;
     private CustomerDto customer;
-/*    private ReservationLineDto reservationLine;*/
+    private ReservationLineDto reservationLine;
 
 
 }

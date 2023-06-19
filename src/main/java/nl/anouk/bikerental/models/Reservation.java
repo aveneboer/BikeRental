@@ -6,10 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,10 +31,9 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-/*
 
    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private ReservationLine reservationLine;
-*/
+
 
 }

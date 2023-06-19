@@ -1,19 +1,15 @@
 
 package nl.anouk.bikerental.controllers;
 
-import jakarta.validation.Valid;
 import nl.anouk.bikerental.dtos.BikeDto;
 import nl.anouk.bikerental.inputs.BikeInputDto;
 import nl.anouk.bikerental.services.BikeService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
+@RequestMapping("/bikes")
 public class BikeController {
     private final BikeService bikeService;
 
@@ -21,40 +17,28 @@ public class BikeController {
         this.bikeService = bikeService;
     }
 
-
-
-    @GetMapping("/bikes/{id}")
-    public ResponseEntity<BikeDto> getBike(@PathVariable("id")Long id) {
-
-        BikeDto bike = bikeService.getBikeById(id);
-
-        return ResponseEntity.ok().body(bike);
-
+    @GetMapping("/all")
+    public List<BikeDto> getAllBikes() {
+        return bikeService.getAllBikes();
     }
 
-    @PostMapping("/bikes")
-    public ResponseEntity<Object> addBike(@Valid @RequestBody BikeInputDto bikeInputDto) {
-
-        BikeDto dto = bikeService.addBike(bikeInputDto);
-
-        return ResponseEntity.created(URI.create("/bikes/" + dto.getId())).body(dto);
+    @GetMapping("/{id}")
+    public BikeDto getBikeById(@PathVariable Long id) {
+        return bikeService.getBikeById(id);
     }
 
-    @DeleteMapping("/bikes/{id}")
-    public ResponseEntity<Object> deleteBike(@PathVariable Long id) {
+    @PostMapping("/add")
+    public BikeDto addBike(@RequestBody BikeInputDto inputDto) {
+        return bikeService.addBike(inputDto);
+    }
+
+    @PatchMapping("/{id}")
+    public BikeDto updateBike(@PathVariable Long id, @RequestBody BikeInputDto updatedBikeInputDto) {
+        return bikeService.partialUpdateBike(id, updatedBikeInputDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteBike(@PathVariable Long id) {
         bikeService.deleteBike(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
-    @PutMapping("/bikes/{id}")
-    public ResponseEntity<Object> updateBike(@PathVariable Long id, @Valid @RequestBody BikeInputDto newBike) {
-        BikeDto dto = bikeService.updateBike(id, newBike);
-
-        return ResponseEntity.ok().body(dto);
-
-    }
-
-
 }
-

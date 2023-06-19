@@ -2,14 +2,13 @@
 package nl.anouk.bikerental.services;
 
 import nl.anouk.bikerental.dtos.BikeDto;
-import nl.anouk.bikerental.inputs.BikeInputDto;
 import nl.anouk.bikerental.exceptions.RecordNotFoundException;
+import nl.anouk.bikerental.inputs.BikeInputDto;
 import nl.anouk.bikerental.models.Bike;
 import nl.anouk.bikerental.models.DtoMapper;
 import nl.anouk.bikerental.repositories.BikeRepository;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -30,6 +29,8 @@ public class BikeService {
             throw new NoSuchElementException("Bike not found");
         }
     }
+
+
 
     public List<BikeDto> getAllBikes() {
         List<Bike> bikeList = bikeRepository.findAll();
@@ -59,27 +60,24 @@ public class BikeService {
         }
     }
 
-    public BikeDto updateBike(Long id, BikeInputDto inputDto) {
+    public BikeDto partialUpdateBike(Long id, BikeInputDto updatedBikeInputDto) {
         Optional<Bike> optionalBike = bikeRepository.findById(id);
 
         if (optionalBike.isPresent()) {
             Bike existingBike = optionalBike.get();
 
-
-            // Update the fields only if they are provided in the inputDto
-            if (inputDto.getBrand() != null) {
-                existingBike.setBrand(inputDto.getBrand());
+            if (updatedBikeInputDto.getBrand() != null) {
+                existingBike.setBrand(updatedBikeInputDto.getBrand());
             }
-            if (inputDto.getQuantity() != 0) {
-                existingBike.setQuantity(inputDto.getQuantity());
+            if (updatedBikeInputDto.getQuantity() != 0) {
+                existingBike.setQuantity(updatedBikeInputDto.getQuantity());
             }
-            if (inputDto.getRegistrationNo() != null) {
-                existingBike.setRegistrationNo(inputDto.getRegistrationNo());
+            if (updatedBikeInputDto.getRegistrationNo() != null) {
+                existingBike.setRegistrationNo(updatedBikeInputDto.getRegistrationNo());
             }
-            if (inputDto.getHourlyPrice() != null) {
-                existingBike.setHourlyPrice(inputDto.getHourlyPrice());
+            if (updatedBikeInputDto.getHourlyPrice() != null) {
+                existingBike.setHourlyPrice(updatedBikeInputDto.getHourlyPrice());
             }
-
 
             bikeRepository.save(existingBike);
 
@@ -88,6 +86,7 @@ public class BikeService {
             throw new NoSuchElementException("Bike not found");
         }
     }
+
     public BikeDto getBikeDto() {
         Bike bike = bikeRepository.findBike();
 

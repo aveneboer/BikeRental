@@ -1,3 +1,6 @@
+INSERT INTO users (username, password, enabled, apikey, email) VALUES ('henk', 'password', true, '7847493', 'test@testy.tst');
+INSERT INTO authorities (username, authority) VALUES ('henk', 'ROLE_ADMIN');
+
 -- Customer
 INSERT INTO customers (first_name, last_name, phone_no, email, address)
 VALUES
