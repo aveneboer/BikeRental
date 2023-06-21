@@ -16,14 +16,12 @@ public interface BikeRepository extends JpaRepository<Bike, Long> {
 
     List<Bike> findAllByIsAvailable(Boolean isAvailable);
 
-
     List<Bike> findAll();
 
     Optional<Bike> findById(Long id);
     @Query("SELECT b FROM Bike b")
     Bike findBike();
 
-    Optional<Bike> findAllById(Long id);
 
 }
 

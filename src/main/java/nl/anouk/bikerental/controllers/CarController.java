@@ -24,8 +24,6 @@ public class CarController {
         this.carService = carService;
     }
 
-
-
     @GetMapping("/cars")
     public ResponseEntity<List<CarDto>> getAllCars(@RequestParam(value = "model", required = false) Optional<String> model) {
 
@@ -47,7 +45,6 @@ public class CarController {
         CarDto car = carService.getCarByPassenger(passenger);
 
         return ResponseEntity.ok().body(car);
-
     }
 
     @PostMapping("/addCar")
@@ -69,20 +66,15 @@ public class CarController {
         }
     }
 
-
     @DeleteMapping("/cars/{id}")
     public ResponseEntity<Object> deleteCar(@PathVariable Long id) {
         carService.deleteCar(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-
     @PatchMapping("/cars/{id}")
-    public ResponseEntity<Object> updateCar(@PathVariable Long id, @Valid @RequestBody CarInputDto newCar){
-            CarDto dto = carService.updateCar(id, newCar);
-
-            return ResponseEntity.ok().body(dto);
-
-        }
+    public CarDto updateCar(@PathVariable Long id, @Valid @RequestBody CarInputDto updatedCarInputDto) {
+        return carService.partialUpdateCar(id, updatedCarInputDto);
+    }
 }
 

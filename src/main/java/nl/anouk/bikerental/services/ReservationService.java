@@ -1,9 +1,11 @@
 package nl.anouk.bikerental.services;
 
+import nl.anouk.bikerental.dtos.CustomerDto;
 import nl.anouk.bikerental.dtos.ReservationDto;
 import nl.anouk.bikerental.exceptions.BikeNotAvailableException;
 import nl.anouk.bikerental.exceptions.RecordNotFoundException;
 import nl.anouk.bikerental.inputs.ReservationInputDto;
+import nl.anouk.bikerental.models.Bike;
 import nl.anouk.bikerental.models.Customer;
 import nl.anouk.bikerental.models.DtoMapper;
 import nl.anouk.bikerental.models.Reservation;
@@ -20,28 +22,56 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final BikeService bikeService;
     private final DtoMapper dtoMapper;
+    private final CustomerService customerService;
 
-    public ReservationService(ReservationRepository reservationRepository, BikeService bikeService, DtoMapper dtoMapper) {
+    public ReservationService(ReservationRepository reservationRepository, BikeService bikeService, CustomerService customerService, DtoMapper dtoMapper) {
         this.reservationRepository = reservationRepository;
         this.bikeService = bikeService;
+        this.customerService = customerService;
         this.dtoMapper = dtoMapper;
     }
 
 
-    public void createReservation(Long bikeId, LocalDate startDate, LocalDate endDate) {
-        boolean isAvailable = bikeService.checkBikeAvailability(bikeId, startDate, endDate);
 
-        if (!isAvailable) {
-            throw new BikeNotAvailableException("De fiets is niet beschikbaar voor de opgegeven datums.");
+    public ReservationDto createReservation(ReservationInputDto reservationInputDto) {
+        LocalDate startDate = reservationInputDto.getStartDate();
+        LocalDate endDate = reservationInputDto.getEndDate();
+        int bikeQuantity = reservationInputDto.getBikeQuantity();
+        CustomerDto customerDto = reservationInputDto.getCustomer();
+
+        List<Long> bikeIds = reservationInputDto.getBikeIds();
+        // Controleer beschikbaarheid van alle fietsen
+        for (Long bikeId : bikeIds) {
+            boolean isAvailable = bikeService.isBikeAvailable(startDate, endDate, bikeQuantity);
+            if (!isAvailable) {
+                throw new BikeNotAvailableException("Een van de fietsen is niet beschikbaar voor de opgegeven datums.");
+            }
         }
-        //Aanpassen!!!!!! map  maken!
+
+        // Maak nieuwe reservering
         Reservation reservation = new Reservation();
-        Reservation reservation = DtoMapper.mapReservationInputDtoToEntity(reservationInputDto);
-        // Bewerk de beschikbaarheid van de fiets
-        bikeService.updateBikeAvailability(bikeId, false);
-        // Sla de reservering op
-        Reservation savedReservation = reservationRepository.save(reservation);
-        return;DtoMapper.mapReservationInputDtoToEntity((savedReservation));
+        reservation.setStartDate(startDate);
+        reservation.setEndDate(endDate);
+        reservation.setBikeQuantity(bikeQuantity);
+
+        // Maak nieuwe klant
+        Customer customer = DtoMapper.mapCustomerDtoToEntity(customerDto);
+        reservation.setCustomer(customer);
+
+
+        // Wijs de fietsen toe aan de reservering op basis van de bikeIds
+        for (Long bikeId : bikeIds) {
+            Bike bike = bikeService.getBikeById(bikeId);
+            reservation.setBike(bike);
+        }
+
+        // Pas de beschikbaarheid van de fietsen aan
+        for (Long bikeId : bikeIds) {
+            bikeService.updateBikeAvailability(bikeId, false);
+        }
+            Reservation savedReservation = reservationRepository.save(reservation);
+            return DtoMapper.mapReservationToDto(savedReservation);
+
     }
 
 

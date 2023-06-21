@@ -2,7 +2,6 @@
 package nl.anouk.bikerental.services;
 
 import nl.anouk.bikerental.dtos.BikeDto;
-import nl.anouk.bikerental.exceptions.BikeNotAvailableException;
 import nl.anouk.bikerental.exceptions.BikeNotFoundException;
 import nl.anouk.bikerental.inputs.BikeInputDto;
 import nl.anouk.bikerental.models.Bike;
@@ -12,6 +11,7 @@ import nl.anouk.bikerental.repositories.BikeRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -25,25 +25,56 @@ public class BikeService {
         this.bikeRepository = bikeRepository;
         this.dtoMapper = dtoMapper;
     }
-// check availability and change availability when a reservation is made
-
+/*
         public boolean checkBikeAvailability(Long bikeId, LocalDate startDate, LocalDate endDate) {
             Bike bike = bikeRepository.findById(bikeId)
                     .orElseThrow(() -> new BikeNotFoundException("Fiets met ID " + bikeId + " niet gevonden."));
 
             return isBikeAvailable(bike, startDate, endDate);
+        }*/
+
+/*    public List<BikeDto> getAvailableBikes(LocalDate startDate, LocalDate endDate, int requiredQuantity) {
+        List<Bike> bikes = bikeRepository.findAll();
+        List<BikeDto> availableBikes = new ArrayList<>();
+
+        for (Bike bike : bikes) {
+            boolean isAvailable = isBikeAvailable(bike, startDate, endDate, requiredQuantity);
+            if (isAvailable) {
+                BikeDto bikeDto = dtoMapper.mapBikeToDto(bike);
+                availableBikes.add(bikeDto);
+            }
         }
 
-        private boolean isBikeAvailable(Bike bike, LocalDate startDate, LocalDate endDate) {
+        return availableBikes;
+    }*/
+
+    public boolean isBikeAvailable(LocalDate startDate, LocalDate endDate, int requiredQuantity) {
+        List<Bike> bikes = bikeRepository.findAll(); // Haal alle fietsen op
+
+        for (Bike bike : bikes) {
+            int availableQuantity = bike.getQuantity();
+
             for (Reservation reservation : bike.getReservations()) {
                 if (startDate.isBefore(reservation.getEndDate()) && endDate.isAfter(reservation.getStartDate())) {
-                    return false;
+                    availableQuantity -= reservation.getBikeQuantity();
+                    if (availableQuantity < requiredQuantity) {
+                        return false;
+                    }
                 }
             }
-            return true;
         }
 
-        public void rentBike(Long bikeId) {
+        return true;
+    }
+    public void updateBikeAvailability(Long bikeId, boolean isAvailable) {
+        Bike bike = bikeRepository.findById(bikeId)
+                .orElseThrow(() -> new BikeNotFoundException("Fiets niet gevonden met ID: " + bikeId));
+        bike.setIsAvailable(isAvailable);
+        bikeRepository.save(bike);
+    }
+/*
+
+    public void rentBike(Long bikeId) {
             Bike bike = bikeRepository.findById(bikeId)
                     .orElseThrow(() -> new BikeNotFoundException("Fiets met ID " + bikeId + " niet gevonden."));
 
@@ -54,8 +85,9 @@ public class BikeService {
             bike.setIsAvailable(false);
             bikeRepository.save(bike);
         }
+*/
 
-    //einde
+
 /*    public BikeDto getBikeById(Long id) {
         Optional<Bike> optionalBike = bikeRepository.findById(id);
 
@@ -66,15 +98,27 @@ public class BikeService {
             throw new RecordNotFoundException("No bike was found");
         }
     }*/
+
+    public List<BikeDto> getAvailableBikes(LocalDate startDate, LocalDate endDate, int requiredQuantity) {
+        List<Bike> bikes = bikeRepository.findAll();
+        List<BikeDto> availableBikes = new ArrayList<>();
+
+        for (Bike bike : bikes) {
+            boolean isAvailable = isBikeAvailable(startDate, endDate, requiredQuantity);
+            if (isAvailable) {
+                BikeDto bikeDto = dtoMapper.mapBikeToDto(bike);
+                availableBikes.add(bikeDto);
+            }
+        }
+
+        return availableBikes;
+    }
+
+    //standaard code
     public Bike getBikeById(Long bikeId) {
         return bikeRepository.findById(bikeId)
                 .orElseThrow(() -> new BikeNotFoundException("Fiets met ID " + bikeId + " niet gevonden."));
     }
-    public List<BikeDto> getAvailableBikes() {
-        List<Bike> availableBikes = bikeRepository.findAllByIsAvailable(true);
-        return DtoMapper.mapBikeListToDtoList(availableBikes);
-    }
-
 
     public void deleteBike(Long bikeId) {
         if (bikeRepository.existsById(bikeId)) {
@@ -84,14 +128,10 @@ public class BikeService {
         }
     }
 
-
-
     public List<BikeDto> getAllBikes() {
         List<Bike> bikeList = bikeRepository.findAll();
         return DtoMapper.mapBikeListToDtoList(bikeList);
     }
-
-
 
     public BikeDto addBike(BikeInputDto inputDto) {
         Bike bike = DtoMapper.mapBikeInputDtoToEntity(inputDto);
@@ -99,8 +139,6 @@ public class BikeService {
 
         return DtoMapper.mapBikeToDto(bike);
     }
-
-
 
     public BikeDto partialUpdateBike(Long id, BikeInputDto updatedBikeInputDto) {
         Optional<Bike> optionalBike = bikeRepository.findById(id);
@@ -129,29 +167,5 @@ public class BikeService {
         }
     }
 
-    public BikeDto getBikeDto() {
-        Bike bike = bikeRepository.findBike();
-
-        BikeDto bikeDto = new BikeDto();
-        bikeDto.setHourlyPrice(bike.getHourlyPrice());
-        bikeDto.setQuantity(bike.getQuantity());
-
-        return bikeDto;
-    }
-
-    public BikeDto transferToDto(Bike bike) {
-        BikeDto dto = new BikeDto();
-
-        dto.setBrand(bike.getBrand());
-        dto.setQuantity(bike.getQuantity());
-        dto.setRegistrationNo(bike.getRegistrationNo());
-        dto.setHourlyPrice(bike.getHourlyPrice());
-
-        return dto;
-    }
-    public List<BikeDto> getAllBikesByBrand(String brand) {
-        List<Bike> bikeList = bikeRepository.findAllBikesByBrandEqualsIgnoreCase(brand);
-        return DtoMapper.mapBikeListToDtoList(bikeList);
-    }
 
 }

@@ -17,7 +17,7 @@ public class DtoMapper {
         dto.setQuantity(bike.getQuantity());
         dto.setRegistrationNo(bike.getRegistrationNo());
         dto.setHourlyPrice(bike.getHourlyPrice());
-        dto.getIsAvailable();
+        dto.setIsAvailable(bike.getIsAvailable());
         return dto;
     }
 
@@ -71,6 +71,15 @@ public class DtoMapper {
         }
 
         return carDtoList;
+    }
+    public static Customer mapCustomerDtoToEntity (CustomerDto Dto) {
+        Customer customer = new Customer();
+        customer.setFirstName(Dto.getFirstName());
+        customer.setLastName(Dto.getLastName());
+        customer.setPhoneNo(Dto.getPhoneNo());
+        customer.setEmail(Dto.getEmail());
+        customer.setAddress(Dto.getAddress());
+        return customer;
     }
 
 
@@ -147,7 +156,7 @@ public class DtoMapper {
 
 
 
-    public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inputDto) {
+/*    public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inputDto) {
         Reservation reservation = new Reservation();
         reservation.setStartDate(inputDto.getStartDate());
         reservation.setEndDate(inputDto.getEndDate());
@@ -178,7 +187,7 @@ public class DtoMapper {
 
         return reservation;
 
-
+    }*/
 
     public static ReservationDto mapReservationToDto(Reservation reservation) {
         ReservationDto dto = new ReservationDto();
@@ -186,6 +195,7 @@ public class DtoMapper {
         dto.setStartDate(reservation.getStartDate());
         dto.setEndDate(reservation.getEndDate());
         dto.setType(reservation.getType());
+        dto.setBikeQuantity(reservation.getBikeQuantity());
 
         CustomerDto customerDto = mapCustomerToDto(reservation.getCustomer(), false);
         dto.setCustomer(customerDto);

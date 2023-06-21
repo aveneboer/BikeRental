@@ -29,12 +29,16 @@ public class Reservation {
     private String type;
     @ManyToOne
     @JoinColumn(name = "bike_id")
+
     private Bike bike;
+    @Column(name = "bike_quantity")
+    private int bikeQuantity;
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-   @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private ReservationLine reservationLine;
+
 
 }

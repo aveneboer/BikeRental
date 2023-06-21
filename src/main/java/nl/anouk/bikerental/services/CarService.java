@@ -8,7 +8,6 @@ import nl.anouk.bikerental.models.DtoMapper;
 import nl.anouk.bikerental.repositories.CarRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -31,16 +30,6 @@ public class CarService {
         return DtoMapper.mapCarListToDtoList(carList);
     }
 
-    public List<CarDto> transferCarListToDtoList(List<Car> cars) {
-        List<CarDto> carDtoList = new ArrayList<>();
-
-        for (Car car : cars) {
-            CarDto dto = DtoMapper.mapCarToDto(car);
-            carDtoList.add(dto);
-        }
-
-        return carDtoList;
-    }
 
     public CarDto addCar(CarInputDto dto) {
         Car car = DtoMapper.mapCarInputDtoToEntity(dto);
@@ -59,13 +48,12 @@ public class CarService {
         }
     }
 
-    public CarDto updateCar(Long id, CarInputDto inputDto) {
+    public CarDto partialUpdateCar(Long id, CarInputDto inputDto) {
         Optional<Car> optionalCar = carRepository.findById(id);
 
         if (optionalCar.isPresent()) {
             Car existingCar = optionalCar.get();
 
-            // Update de velden alleen als ze zijn opgegeven in de inputDto
             if (inputDto.getModel() != null) {
                 existingCar.setModel(inputDto.getModel());
             }
@@ -75,8 +63,6 @@ public class CarService {
             if (inputDto.getDayPrice() != null) {
                 existingCar.setDayPrice(inputDto.getDayPrice());
             }
-
-
 
             carRepository.save(existingCar);
 
@@ -92,14 +78,6 @@ public class CarService {
         } else {
             throw new NoSuchElementException("Car not found");
         }
-    }
-    public CarDto getCarDto() {
-        Car car = carRepository.findCar();
-
-        CarDto carDto = new CarDto();
-        carDto.setDayPrice(car.getDayPrice());
-
-        return carDto;
     }
 }
 
