@@ -1,9 +1,7 @@
 package nl.anouk.bikerental.controllers;
 
 
-import nl.anouk.bikerental.exceptions.BadRequestException;
-import nl.anouk.bikerental.exceptions.RecordNotFoundException;
-import nl.anouk.bikerental.exceptions.UsernameNotFoundException;
+import nl.anouk.bikerental.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,6 +25,14 @@ public class ExceptionController {
     public ResponseEntity<String> handleBadRequestException(BadRequestException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+    @ExceptionHandler(BikeNotFoundException.class)
+    public ResponseEntity<String> handleBikeNotFoundException(BikeNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+@ExceptionHandler(BikeNotAvailableException.class)
+    public ResponseEntity<String> handleBikeNotAvailableException(BikeNotAvailableException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+}
 
 
 }

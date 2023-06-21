@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,20 +20,21 @@ public class Reservation {
     private Long reservationId;
 
     @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Column(name = "type")
     private String type;
-
+    @ManyToOne
+    @JoinColumn(name = "bike_id")
+    private Bike bike;
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private ReservationLine reservationLine;
-
 
 }

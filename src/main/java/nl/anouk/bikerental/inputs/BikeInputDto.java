@@ -18,6 +18,7 @@ public class BikeInputDto {
     private int quantity;
     private Long registrationNo;
     private BigDecimal hourlyPrice;
+    private Boolean isAvailable;
 
 }
 

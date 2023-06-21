@@ -1,4 +1,5 @@
 package nl.anouk.bikerental.models;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,5 +30,15 @@ public class Bike {
 
     @Column(name = "hourly_price")
     private BigDecimal hourlyPrice;
+
+    @Column(name = "is_Available")
+    private Boolean isAvailable;
+
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+    @OneToMany(mappedBy = "bike", cascade = CascadeType.ALL)
+    private List<Reservation> reservations;
 
 }

@@ -1,12 +1,16 @@
 package nl.anouk.bikerental.services;
-import nl.anouk.bikerental.dtos.*;
+
+import nl.anouk.bikerental.dtos.ReservationDto;
+import nl.anouk.bikerental.exceptions.BikeNotAvailableException;
 import nl.anouk.bikerental.exceptions.RecordNotFoundException;
 import nl.anouk.bikerental.inputs.ReservationInputDto;
+import nl.anouk.bikerental.models.Customer;
 import nl.anouk.bikerental.models.DtoMapper;
 import nl.anouk.bikerental.models.Reservation;
 import nl.anouk.bikerental.repositories.ReservationRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -14,10 +18,33 @@ import java.util.List;
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
+    private final BikeService bikeService;
+    private final DtoMapper dtoMapper;
 
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository, BikeService bikeService, DtoMapper dtoMapper) {
         this.reservationRepository = reservationRepository;
+        this.bikeService = bikeService;
+        this.dtoMapper = dtoMapper;
     }
+
+
+    public void createReservation(Long bikeId, LocalDate startDate, LocalDate endDate) {
+        boolean isAvailable = bikeService.checkBikeAvailability(bikeId, startDate, endDate);
+
+        if (!isAvailable) {
+            throw new BikeNotAvailableException("De fiets is niet beschikbaar voor de opgegeven datums.");
+        }
+        //Aanpassen!!!!!! map  maken!
+        Reservation reservation = new Reservation();
+        Reservation reservation = DtoMapper.mapReservationInputDtoToEntity(reservationInputDto);
+        // Bewerk de beschikbaarheid van de fiets
+        bikeService.updateBikeAvailability(bikeId, false);
+        // Sla de reservering op
+        Reservation savedReservation = reservationRepository.save(reservation);
+        return;DtoMapper.mapReservationInputDtoToEntity((savedReservation));
+    }
+
+
 
     public List<ReservationDto> getAllReservations() {
         List<Reservation> reservations = reservationRepository.findAll();
@@ -27,12 +54,6 @@ public class ReservationService {
     public ReservationDto getReservationById(Long id) {
         Reservation reservation = findReservationById(id);
         return DtoMapper.mapReservationToDto(reservation);
-    }
-
-    public ReservationDto createReservation(ReservationInputDto reservationInputDto) {
-        Reservation reservation = DtoMapper.mapReservationInputDtoToEntity(reservationInputDto);
-        Reservation savedReservation = reservationRepository.save(reservation);
-        return DtoMapper.mapReservationToDto(savedReservation);
     }
 
     public void deleteReservation(Long id) {

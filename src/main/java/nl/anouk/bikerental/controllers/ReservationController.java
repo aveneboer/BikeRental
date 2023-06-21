@@ -2,7 +2,10 @@ package nl.anouk.bikerental.controllers;
 
 import jakarta.validation.Valid;
 import nl.anouk.bikerental.dtos.ReservationDto;
+import nl.anouk.bikerental.exceptions.BikeNotAvailableException;
 import nl.anouk.bikerental.inputs.ReservationInputDto;
+import nl.anouk.bikerental.models.DtoMapper;
+import nl.anouk.bikerental.models.Reservation;
 import nl.anouk.bikerental.services.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +38,27 @@ public class ReservationController {
         ReservationDto dto = reservationService.createReservation(reservationInputDto);
         return ResponseEntity.created(null).body(dto);
     }
+
+    @PostMapping
+    public ResponseEntity<ReservationDto> createReservation(@RequestBody ReservationInputDto inputDto) {
+        try {
+            ReservationInputDto reservationInputDto = new ReservationInputDto();
+            reservationInputDto.setStartDate(inputDto.getStartDate());
+            reservationInputDto.setEndDate(inputDto.getEndDate());
+            reservationInputDto.setCustomerId(inputDto.getCustomerId());
+            reservationInputDto.setType(inputDto.getType());
+            reservationInputDto.setBikeId(inputDto.getBikeId());
+            reservationInputDto.setReservationLine(inputDto.getReservationLine());
+
+            Reservation reservation = DtoMapper.mapReservationInputDtoToEntity(reservationInputDto);
+            reservation = reservationService.createReservation(reservation);
+            ReservationDto reservationDto = DtoMapper.mapReservationToDto(reservation);
+            return ResponseEntity.ok(reservationDto);
+        } catch (BikeNotAvailableException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Object> deleteReservation(@PathVariable Long id) {

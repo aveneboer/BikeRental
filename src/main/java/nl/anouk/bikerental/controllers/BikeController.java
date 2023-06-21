@@ -3,6 +3,7 @@ package nl.anouk.bikerental.controllers;
 
 import nl.anouk.bikerental.dtos.BikeDto;
 import nl.anouk.bikerental.inputs.BikeInputDto;
+import nl.anouk.bikerental.models.Bike;
 import nl.anouk.bikerental.services.BikeService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,13 +18,21 @@ public class BikeController {
         this.bikeService = bikeService;
     }
 
+
+    ////deze getmapping controleren, klopt nog niet
+
+    @GetMapping("/available")
+    public List<BikeDto> getAvailableBikes() {
+        return bikeService.getAvailableBikes();
+    }
+
     @GetMapping("/all")
     public List<BikeDto> getAllBikes() {
         return bikeService.getAllBikes();
     }
 
     @GetMapping("/{id}")
-    public BikeDto getBikeById(@PathVariable Long id) {
+    public Bike getBikeById(@PathVariable Long id) {
         return bikeService.getBikeById(id);
     }
 
