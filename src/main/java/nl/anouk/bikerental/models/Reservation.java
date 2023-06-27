@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,16 +28,19 @@ public class Reservation {
 
     @Column(name = "type")
     private String type;
-    @ManyToOne
-    @JoinColumn(name = "bike_id")
 
-    private Bike bike;
     @Column(name = "bike_quantity")
     private int bikeQuantity;
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-
+    @ManyToMany
+    @JoinTable(
+            name = "reservation_bike",
+            joinColumns = @JoinColumn(name = "reservation_id"),
+            inverseJoinColumns = @JoinColumn(name = "bike_id")
+    )
+    private List<Bike> bikes;
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private ReservationLine reservationLine;
 

@@ -8,6 +8,7 @@ import nl.anouk.bikerental.models.Bike;
 import nl.anouk.bikerental.models.DtoMapper;
 import nl.anouk.bikerental.models.Reservation;
 import nl.anouk.bikerental.repositories.BikeRepository;
+import nl.anouk.bikerental.repositories.ReservationRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,100 +20,61 @@ import java.util.Optional;
 @Service
 public class BikeService {
     private final BikeRepository bikeRepository;
+    private final ReservationRepository reservationRepository;
     private final DtoMapper dtoMapper;
 
-    public BikeService(BikeRepository bikeRepository, DtoMapper dtoMapper) {
+    public BikeService(BikeRepository bikeRepository, DtoMapper dtoMapper, ReservationRepository reservationRepository) {
         this.bikeRepository = bikeRepository;
         this.dtoMapper = dtoMapper;
+        this.reservationRepository = reservationRepository;
     }
-/*
-        public boolean checkBikeAvailability(Long bikeId, LocalDate startDate, LocalDate endDate) {
-            Bike bike = bikeRepository.findById(bikeId)
-                    .orElseThrow(() -> new BikeNotFoundException("Fiets met ID " + bikeId + " niet gevonden."));
 
-            return isBikeAvailable(bike, startDate, endDate);
-        }*/
+    public boolean areBikesAvailable(LocalDate startDate, LocalDate endDate, int bikeQuantity) {
+        List<Bike> allBikes = bikeRepository.findAll();
+        List<Bike> availableBikes = new ArrayList<>(allBikes);
 
-/*    public List<BikeDto> getAvailableBikes(LocalDate startDate, LocalDate endDate, int requiredQuantity) {
-        List<Bike> bikes = bikeRepository.findAll();
-        List<BikeDto> availableBikes = new ArrayList<>();
-
-        for (Bike bike : bikes) {
-            boolean isAvailable = isBikeAvailable(bike, startDate, endDate, requiredQuantity);
-            if (isAvailable) {
-                BikeDto bikeDto = dtoMapper.mapBikeToDto(bike);
-                availableBikes.add(bikeDto);
-            }
-        }
-
-        return availableBikes;
-    }*/
-
-    public boolean isBikeAvailable(LocalDate startDate, LocalDate endDate, int requiredQuantity) {
-        List<Bike> bikes = bikeRepository.findAll(); // Haal alle fietsen op
-
-        for (Bike bike : bikes) {
-            int availableQuantity = bike.getQuantity();
-
+        for (Bike bike : allBikes) {
             for (Reservation reservation : bike.getReservations()) {
-                if (startDate.isBefore(reservation.getEndDate()) && endDate.isAfter(reservation.getStartDate())) {
-                    availableQuantity -= reservation.getBikeQuantity();
-                    if (availableQuantity < requiredQuantity) {
-                        return false;
+                if (endDate != null && reservation.getStartDate() != null && reservation.getEndDate() != null) {
+                    if (endDate.isAfter(reservation.getStartDate()) && startDate.isBefore(reservation.getEndDate())) {
+                        availableBikes.remove(bike);
+                        break;
                     }
                 }
             }
         }
 
-        return true;
+        return availableBikes.size() >= bikeQuantity;
     }
-    public void updateBikeAvailability(Long bikeId, boolean isAvailable) {
-        Bike bike = bikeRepository.findById(bikeId)
-                .orElseThrow(() -> new BikeNotFoundException("Fiets niet gevonden met ID: " + bikeId));
-        bike.setIsAvailable(isAvailable);
-        bikeRepository.save(bike);
-    }
-/*
 
-    public void rentBike(Long bikeId) {
-            Bike bike = bikeRepository.findById(bikeId)
-                    .orElseThrow(() -> new BikeNotFoundException("Fiets met ID " + bikeId + " niet gevonden."));
+    public List<Long> getAvailableBikeIds(LocalDate startDate, LocalDate endDate, int bikeQuantity) {
+        List<Long> availableBikeIds = new ArrayList<>();
 
-            if (!bike.isAvailable()) {
-                throw new BikeNotAvailableException("De fiets is niet beschikbaar.");
+        List<Bike> availableBikes = bikeRepository.findAllByIsAvailable(true);
+        for (Bike bike : availableBikes) {
+            boolean isAvailable = true;
+            List<Reservation> reservations = reservationRepository.findActiveReservationsByBike(bike);
+            for (Reservation reservation : reservations) {
+                if (endDate != null && reservation.getStartDate() != null && reservation.getEndDate() != null) {
+                    if (endDate.isAfter(reservation.getStartDate()) && startDate.isBefore(reservation.getEndDate())) {
+                        isAvailable = false;
+                        break;
+                    }
+                }
             }
-
-            bike.setIsAvailable(false);
-            bikeRepository.save(bike);
-        }
-*/
-
-
-/*    public BikeDto getBikeById(Long id) {
-        Optional<Bike> optionalBike = bikeRepository.findById(id);
-
-        if (optionalBike.isPresent()) {
-            Bike bike = optionalBike.get();
-            return DtoMapper.mapBikeToDto(bike);
-        } else {
-            throw new RecordNotFoundException("No bike was found");
-        }
-    }*/
-
-    public List<BikeDto> getAvailableBikes(LocalDate startDate, LocalDate endDate, int requiredQuantity) {
-        List<Bike> bikes = bikeRepository.findAll();
-        List<BikeDto> availableBikes = new ArrayList<>();
-
-        for (Bike bike : bikes) {
-            boolean isAvailable = isBikeAvailable(startDate, endDate, requiredQuantity);
             if (isAvailable) {
-                BikeDto bikeDto = dtoMapper.mapBikeToDto(bike);
-                availableBikes.add(bikeDto);
+                availableBikeIds.add(bike.getId());
+                if (availableBikeIds.size() == bikeQuantity) {
+                    break;
+                }
             }
         }
 
-        return availableBikes;
+        return availableBikeIds;
     }
+
+
+
 
     //standaard code
     public Bike getBikeById(Long bikeId) {
@@ -148,9 +110,6 @@ public class BikeService {
 
             if (updatedBikeInputDto.getBrand() != null) {
                 existingBike.setBrand(updatedBikeInputDto.getBrand());
-            }
-            if (updatedBikeInputDto.getQuantity() != 0) {
-                existingBike.setQuantity(updatedBikeInputDto.getQuantity());
             }
             if (updatedBikeInputDto.getRegistrationNo() != null) {
                 existingBike.setRegistrationNo(updatedBikeInputDto.getRegistrationNo());

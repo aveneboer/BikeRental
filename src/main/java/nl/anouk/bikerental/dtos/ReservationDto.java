@@ -21,5 +21,4 @@ public class ReservationDto {
     private Long bikeId;
     private int bikeQuantity;
 
-
 }

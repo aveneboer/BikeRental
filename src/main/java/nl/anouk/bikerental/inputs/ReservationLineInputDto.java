@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import nl.anouk.bikerental.dtos.CustomerDto;
 import nl.anouk.bikerental.dtos.ReservationDto;
 
 import java.time.LocalDateTime;
@@ -16,8 +15,7 @@ import java.time.LocalDateTime;
 public class ReservationLineInputDto {
     private LocalDateTime dateOrdered;
     private String confirmation;
-    private String status;
-    private String paymentMethod;
+
     private int duration;
     private double totalPrice;
     private ReservationDto reservation;

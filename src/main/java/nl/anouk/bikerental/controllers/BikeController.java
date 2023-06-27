@@ -5,7 +5,9 @@ import jakarta.validation.Valid;
 import nl.anouk.bikerental.dtos.BikeDto;
 import nl.anouk.bikerental.inputs.BikeInputDto;
 import nl.anouk.bikerental.models.Bike;
+import nl.anouk.bikerental.repositories.BikeRepository;
 import nl.anouk.bikerental.services.BikeService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -20,10 +22,27 @@ import java.util.List;
 @RequestMapping("/bikes")
 public class BikeController {
     private final BikeService bikeService;
+    private final BikeRepository bikeRepository;
 
-    public BikeController(BikeService bikeService) {
+    public BikeController(BikeService bikeService, BikeRepository bikeRepository) {
         this.bikeService = bikeService;
+        this.bikeRepository = bikeRepository;
     }
+
+
+    @GetMapping("/checkAvailability")
+    public ResponseEntity<String> checkAvailability(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                    @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                                                    @RequestParam("bikeQuantity") int bikeQuantity) {
+        boolean areBikesAvailable = bikeService.areBikesAvailable(startDate, endDate, bikeQuantity);
+
+        if (areBikesAvailable) {
+            return ResponseEntity.ok("Bikes are available.");
+        } else {
+            return ResponseEntity.ok("Bikes are not available.");
+        }
+    }
+
 
     @GetMapping("/all")
     public List<BikeDto> getAllBikes() {
@@ -35,13 +54,6 @@ public class BikeController {
         return bikeService.getBikeById(id);
     }
 
-    @GetMapping("/available_bikes")
-    public ResponseEntity<List<BikeDto>> getAvailableBikes(@RequestParam LocalDate startDate,
-                                                           @RequestParam LocalDate endDate,
-                                                           @RequestParam int requiredQuantity) {
-        List<BikeDto> availableBikes = bikeService.getAvailableBikes(startDate, endDate, requiredQuantity);
-        return ResponseEntity.ok(availableBikes);
-    }
 
     @PostMapping("/add")
     public ResponseEntity<Object> addBike(@Valid @RequestBody BikeInputDto bikeInputDto, BindingResult br) {

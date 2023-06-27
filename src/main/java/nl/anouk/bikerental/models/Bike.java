@@ -22,8 +22,6 @@ public class Bike {
 
     @Column(name = "brands")
     private String brand;
-    @Column(name = "quantity")
-    private int quantity;
 
     @Column(name = "registration_numbers")
     private Long registrationNo;
@@ -31,14 +29,11 @@ public class Bike {
     @Column(name = "hourly_price")
     private BigDecimal hourlyPrice;
 
+
     @Column(name = "is_Available")
     private Boolean isAvailable;
 
-
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-    @OneToMany(mappedBy = "bike", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "bikes", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 
 }

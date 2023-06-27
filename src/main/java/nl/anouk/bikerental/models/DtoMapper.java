@@ -14,7 +14,6 @@ public class DtoMapper {
         BikeDto dto = new BikeDto();
         dto.setId(bike.getId());
         dto.setBrand(bike.getBrand());
-        dto.setQuantity(bike.getQuantity());
         dto.setRegistrationNo(bike.getRegistrationNo());
         dto.setHourlyPrice(bike.getHourlyPrice());
         dto.setIsAvailable(bike.getIsAvailable());
@@ -24,7 +23,6 @@ public class DtoMapper {
     public static Bike mapBikeInputDtoToEntity(BikeInputDto inputDto) {
         Bike bike = new Bike();
         bike.setBrand(inputDto.getBrand());
-        bike.setQuantity(inputDto.getQuantity());
         bike.setRegistrationNo(inputDto.getRegistrationNo());
         bike.setHourlyPrice(inputDto.getHourlyPrice());
         bike.setIsAvailable(inputDto.getIsAvailable());
@@ -156,11 +154,12 @@ public class DtoMapper {
 
 
 
-/*    public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inputDto) {
+   public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inputDto) {
         Reservation reservation = new Reservation();
         reservation.setStartDate(inputDto.getStartDate());
         reservation.setEndDate(inputDto.getEndDate());
         reservation.setType(inputDto.getType());
+        reservation.setBikeQuantity(inputDto.getBikeQuantity());
 
         Customer customer = new Customer();
         customer.setFirstName(inputDto.getCustomer().getFirstName());
@@ -171,23 +170,10 @@ public class DtoMapper {
 
         reservation.setCustomer(customer);
 
-        // Wijs de fiets toe aan de reservering op basis van beschikbaarheid
-        Long bikeId = inputDto.getBikeId();
-        Bike bike = getAvailableBikeById(bikeId);
-        if (bike == null) {
-            // Handel het geval af waarin de fiets niet beschikbaar is
-            // Gooi een uitzondering, retourneer een foutmelding, enz.
-        } else {
-            reservation.setBike(bike);
-            bike.setIsAvailable(false); // Markeer de fiets als niet beschikbaar
-            // Voer eventueel andere acties uit, zoals het bijwerken van de fietsentiteit in de database
-        }
-
-        // Andere toewijzingen
 
         return reservation;
 
-    }*/
+    }
 
     public static ReservationDto mapReservationToDto(Reservation reservation) {
         ReservationDto dto = new ReservationDto();
@@ -211,12 +197,8 @@ public class DtoMapper {
 
     public static ReservationLine mapReservationLineInputDtoToEntity(ReservationLineInputDto inputDto) {
         ReservationLine reservationLine = new ReservationLine();
-        reservationLine.setDateOrdered(inputDto.getDateOrdered());
         reservationLine.setConfirmation(inputDto.getConfirmation());
-        reservationLine.setStatus(inputDto.getStatus());
-        reservationLine.setPaymentMethod(inputDto.getPaymentMethod());
-        reservationLine.setDuration(inputDto.getDuration());
-        reservationLine.setTotalPrice(inputDto.getTotalPrice());
+
 
         return reservationLine;
     }
@@ -228,8 +210,7 @@ public class DtoMapper {
         dto.setReservationLineId(reservationLine.getReservationLineId());
         dto.setDateOrdered(reservationLine.getDateOrdered());
         dto.setConfirmation(reservationLine.getConfirmation());
-        dto.setStatus(reservationLine.getStatus());
-        dto.setPaymentMethod(reservationLine.getPaymentMethod());
+
         dto.setDuration(reservationLine.getDuration());
         dto.setTotalPrice(reservationLine.getTotalPrice());
 
@@ -246,8 +227,6 @@ public class DtoMapper {
 
         reservationLine.setDateOrdered(reservationLineInputDto.getDateOrdered());
         reservationLine.setConfirmation(reservationLineInputDto.getConfirmation());
-        reservationLine.setStatus(reservationLineInputDto.getStatus());
-        reservationLine.setPaymentMethod(reservationLineInputDto.getPaymentMethod());
         reservationLine.setDuration(reservationLineInputDto.getDuration());
         reservationLine.setTotalPrice(reservationLineInputDto.getTotalPrice());
 

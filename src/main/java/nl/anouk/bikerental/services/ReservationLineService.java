@@ -2,29 +2,36 @@
 package nl.anouk.bikerental.services;
 
 
-import nl.anouk.bikerental.dtos.ReservationDto;
 import nl.anouk.bikerental.dtos.ReservationLineDto;
 import nl.anouk.bikerental.exceptions.RecordNotFoundException;
-import nl.anouk.bikerental.inputs.ReservationLineInputDto;
 import nl.anouk.bikerental.models.DtoMapper;
+import nl.anouk.bikerental.models.Reservation;
 import nl.anouk.bikerental.models.ReservationLine;
 import nl.anouk.bikerental.repositories.ReservationLineRepository;
+import nl.anouk.bikerental.repositories.ReservationRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class ReservationLineService {
     private final ReservationLineRepository reservationLineRepository;
+    private final ReservationRepository reservationRepository;
+
     private final BikeService bikeService;
     private final CarService carService;
     private final ReservationService reservationService;
 
-    public ReservationLineService(ReservationLineRepository reservationLineRepository, BikeService bikeService, CarService carService, ReservationService reservationService) {
+    public ReservationLineService(ReservationLineRepository reservationLineRepository, BikeService bikeService, CarService carService, ReservationService reservationService, ReservationRepository reservationRepository) {
         this.reservationLineRepository = reservationLineRepository;
         this.bikeService = bikeService;
         this.carService = carService;
         this.reservationService = reservationService;
+        this. reservationRepository = reservationRepository;
+
     }
 
     public ReservationLineDto getReservationLineById(Long id) {
@@ -39,13 +46,35 @@ public class ReservationLineService {
         return DtoMapper.mapReservationLineListToDtoList(reservationLines);
     }
 
-    public ReservationLineDto createReservationLine(ReservationDto reservationDto, ReservationLineInputDto reservationLineInputDto) {
 
-            ReservationLine reservationLine = DtoMapper.mapReservationLineInputDtoToEntity(reservationLineInputDto);
-            ReservationLine savedReservationLine = reservationLineRepository.save(reservationLine);
+    public ReservationLine createReservationLine(Long reservationId) {
+        // Haal de Reservation op aan de hand van het reservationId
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new RuntimeException("Reservation not found"));
 
-            return DtoMapper.mapReservationLineToDto(savedReservationLine);
-        }}
+        ReservationLine reservationLine = new ReservationLine();
+        reservationLine.setDateOrdered(LocalDateTime.now());
+        reservationLine.setConfirmation("confirmed");
+
+
+        // Bereken de duur op basis van de startdatum en einddatum
+        LocalDate startDate = reservation.getStartDate();
+        LocalDate endDate = reservation.getEndDate();
+        Duration duration = Duration.between(startDate, endDate);
+        int durationInDays = (int) duration.toDays();
+        reservationLine.setDuration(durationInDays);
+
+        // Bereken de totale prijs op basis van de duur, uurprijs en aantal fietsen
+        double hourlyPrice = 15; // Vervang dit met de werkelijke uurprijs
+        int bikeQuantity = reservation.getBikeQuantity();
+        double totalPrice = durationInDays * 6 * hourlyPrice * bikeQuantity; // Aangenomen dat een dag gelijk is aan 6 uur
+        reservationLine.setTotalPrice(totalPrice);
+
+        reservationLineRepository.save(reservationLine);
+
+        return reservationLine;
+    }}
+
 
         /*
     public ReservationLineDto createReservationLine(ReservationDto reservationDto, ReservationLineInputDto reservationLineInputDto) {
