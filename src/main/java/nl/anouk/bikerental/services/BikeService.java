@@ -22,6 +22,7 @@ public class BikeService {
         this.bikeRepository = bikeRepository;
         this.dtoMapper = dtoMapper;
     }
+
     public void deleteBike(Long bikeId) {
         if (bikeRepository.existsById(bikeId)) {
             bikeRepository.deleteById(bikeId);
@@ -31,14 +32,8 @@ public class BikeService {
     }
 
 
-
     public List<BikeDto> getAllBikes() {
         List<Bike> bikeList = bikeRepository.findAll();
-        return DtoMapper.mapBikeListToDtoList(bikeList);
-    }
-
-    public List<BikeDto> getAllBikesByBrand(String brand) {
-        List<Bike> bikeList = bikeRepository.findAllBikesByBrandEqualsIgnoreCase(brand);
         return DtoMapper.mapBikeListToDtoList(bikeList);
     }
 
@@ -85,27 +80,6 @@ public class BikeService {
         } else {
             throw new NoSuchElementException("Bike not found");
         }
-    }
-
-    public BikeDto getBikeDto() {
-        Bike bike = bikeRepository.findBike();
-
-        BikeDto bikeDto = new BikeDto();
-        bikeDto.setHourlyPrice(bike.getHourlyPrice());
-        bikeDto.setQuantity(bike.getQuantity());
-
-        return bikeDto;
-    }
-
-    public BikeDto transferToDto(Bike bike) {
-        BikeDto dto = new BikeDto();
-
-        dto.setBrand(bike.getBrand());
-        dto.setQuantity(bike.getQuantity());
-        dto.setRegistrationNo(bike.getRegistrationNo());
-        dto.setHourlyPrice(bike.getHourlyPrice());
-
-        return dto;
     }
 
 }

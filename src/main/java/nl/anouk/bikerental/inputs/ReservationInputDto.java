@@ -1,10 +1,11 @@
 package nl.anouk.bikerental.inputs;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nl.anouk.bikerental.dtos.CustomerDto;
-
+import nl.anouk.bikerental.dtos.ReservationLineDto;
 
 import java.time.LocalDateTime;
 
@@ -20,7 +21,7 @@ public class ReservationInputDto {
     private String type;
     private CustomerDto customer;
 
- /*   private ReservationLineDto reservationLine;*/
+    private ReservationLineDto reservationLine;
 
 
 }
