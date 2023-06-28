@@ -11,11 +11,11 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
-public class File {
+public class DriverLicense {
     @Id
     @GeneratedValue
     private Long id;
     private String filename;
     @Lob
-    private byte[] docfile;
+    private byte[] driverLicense;
 }

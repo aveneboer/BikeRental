@@ -1,8 +1,9 @@
 package nl.anouk.bikerental.controllers;
 
 
-import nl.anouk.bikerental.models.File;
-import nl.anouk.bikerental.repositories.FileRepository;
+import nl.anouk.bikerental.exceptions.RecordNotFoundException;
+import nl.anouk.bikerental.models.DriverLicense;
+import nl.anouk.bikerental.services.DriverLicenseService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,39 +12,48 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
-public class FileController {
-    private final FileRepository fileRepository;
+@RequestMapping("/driverLicense")
+public class DriverLicenseController {
+    private final DriverLicenseService driverLicenseService;
 
-    public FileController(FileRepository fileRepository) {
-        this.fileRepository = fileRepository;
+    public DriverLicenseController(DriverLicenseService driverLicenseService) {
+        this.driverLicenseService = driverLicenseService;
     }
 
-    @PostMapping("/single/uploadDb")
-    public ResponseEntity<String> singleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
-        File uploadfile = new File();
-        //file.getOriginalFilename();
-        uploadfile.setFilename("newfile"); //omzetten naar Dto of filename get original filename
-        uploadfile.setDocfile(file.getBytes());
-
-        fileRepository.save(uploadfile);
-
-        return ResponseEntity.ok("Your upload was succesful");
-    }
-
-    @GetMapping("/downloadFromDb/{fileId}")
-    public ResponseEntity<byte[]> downloadSingleFile(@PathVariable Long fileId) {
-        File file = fileRepository.findById(fileId).orElseThrow(() -> new RuntimeException());
-        byte[] docFile = file.getDocfile();
-        if (docFile == null) {
-            throw new RuntimeException("there is no file yet.");
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadDriverLicense(@RequestParam("file") MultipartFile file) {
+        try {
+            DriverLicense driverLicense = driverLicenseService.saveDriverLicense(file);
+            return ResponseEntity.ok("DriverLicense uploaded successfully. ID: " + driverLicense.getId());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading DriverLicense");
         }
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
-        headers.setContentDispositionFormData("attachment", "file" + file.getFilename() + ".png");
-        headers.setContentLength(docFile.length);
-        return new ResponseEntity<>(docFile, headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/download/{id}")
+    public ResponseEntity<?> downloadDriverLicense(@PathVariable Long id) {
+        try {
+            DriverLicense driverLicense = driverLicenseService.getDriverLicense(id);
+            byte[] driverLicenseContent = driverLicense.getDriverLicense();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", "driverLicense_" + id + ".pdf");
+            headers.setContentLength(driverLicenseContent.length);
+
+            return new ResponseEntity<>(driverLicenseContent, headers, HttpStatus.OK);
+        } catch (RecordNotFoundException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "DriverLicense not found");
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
     }
 }
+
 
