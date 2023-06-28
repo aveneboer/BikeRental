@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import nl.anouk.bikerental.dtos.CarDto;
 import nl.anouk.bikerental.inputs.CarInputDto;
 import nl.anouk.bikerental.services.CarService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@RequestMapping("/cars")
 @RestController
 public class CarController {
     private final CarService carService;
@@ -23,6 +26,20 @@ public class CarController {
     public CarController(CarService carService) {
         this.carService = carService;
     }
+
+    @GetMapping("/checkAvailability")
+    public ResponseEntity<String> checkAvailability(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                    @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        boolean isCarAvailable = carService.isCarAvailable(startDate, endDate);
+
+        if (isCarAvailable) {
+            return ResponseEntity.ok("Car is available.");
+        } else {
+            return ResponseEntity.ok("Car is not available.");
+        }
+    }
+
+
 
     @GetMapping("/cars")
     public ResponseEntity<List<CarDto>> getAllCars(@RequestParam(value = "model", required = false) Optional<String> model) {

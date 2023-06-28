@@ -15,10 +15,10 @@ VALUES
     ('Knaap', '841256', 'true'),
     ('PhatFour', '54321', 'true');
 -- Car
-INSERT INTO cars (model, capacity, quantity)
+INSERT INTO cars (model, capacity, quantity, is_Available)
 VALUES
-    ('Toyota Highlander', 6, 1),
-    ('Toyota RAV4', 3, 2);
+    ('Toyota Highlander', 6, 1, 'true'),
+    ('Toyota RAV4', 3, 2, 'true');
 
 -- Reservation
 INSERT INTO reservations (start_date, end_date, type, bike_quantity, customer_id)

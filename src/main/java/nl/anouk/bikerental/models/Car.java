@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,13 +20,18 @@ public class Car {
     private Long id;
     @Column(name = "model")
     private String model;
-
+    @Column(name = "quantity")
+    private String quantity;
     @Column(name = "capacity")
     private int passenger;
-    @Column(name = "day_price")
-    private BigDecimal dayPrice;
-    @Column
-    private int quantity;
+    @Column(name = "is_Available")
+    private Boolean isAvailable;
+    @OneToMany(mappedBy = "car")
+    private List<Reservation> reservations;
+
+
+
+
 
 
 }

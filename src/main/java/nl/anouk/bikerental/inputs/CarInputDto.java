@@ -17,6 +17,8 @@ public class CarInputDto {
     private String model;
 
     private int passenger;
-    private int quantity;
+    private Boolean isAvailable;
+    private String quantity;
+
 }
 

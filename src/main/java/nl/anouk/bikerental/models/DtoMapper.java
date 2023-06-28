@@ -44,6 +44,7 @@ public class DtoMapper {
         dto.setModel(car.getModel());
         dto.setPassenger(car.getPassenger());
         dto.setQuantity(car.getQuantity());
+        dto.setIsAvailable(car.getIsAvailable());
         return dto;
     }
 
@@ -52,6 +53,7 @@ public class DtoMapper {
         car.setModel(inputDto.getModel());
         car.setQuantity(inputDto.getQuantity());
         car.setPassenger(inputDto.getPassenger());
+        car.setIsAvailable(inputDto.getIsAvailable());
         return car;
     }
 
@@ -63,7 +65,6 @@ public class DtoMapper {
             CarDto dto = mapCarToDto(car);
             carDtoList.add(dto);
         }
-
         return carDtoList;
     }
     public static Customer mapCustomerDtoToEntity (CustomerDto Dto) {

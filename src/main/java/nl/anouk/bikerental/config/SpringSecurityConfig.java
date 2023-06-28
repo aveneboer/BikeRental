@@ -87,7 +87,7 @@ private final CustomUserDetailsService customUserDetailsService;
 //                .requestMatchers(HttpMethod.DELETE, "/reservation/{id}").hasRole("USER")
 //                .requestMatchers(HttpMethod.PATCH, "/reservations/{id}").hasRole("USER")
 //
- //               .requestMatchers(HttpMethod.POST, "/single/uploadeDb").hasAnyRole("ADMIN", "USER")
+ //               .requestMatchers(HttpMethod.POST, "/driverLicense/upload").hasAnyRole("ADMIN", "USER")
 //
 //              //  .requestMatchers("/**").authenticated() is een wildcard, je mag overal bij zolang je maar ingelogd bent ongeacht user of admin
 //                .requestMatchers("/authenticated").authenticated()

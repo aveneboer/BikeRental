@@ -12,11 +12,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CarDto {
     private Long id;
-
     private String model;
-
     private int passenger;
+    private Boolean isAvailable;
+    private String quantity;
 
-    private int quantity;
 }
 
