@@ -21,7 +21,6 @@ public interface BikeRepository extends JpaRepository<Bike, Long> {
     @Query("SELECT b FROM Bike b")
     Bike findBike();
 
-
 }
 
 

@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nl.anouk.bikerental.dtos.CustomerDto;
 import nl.anouk.bikerental.dtos.ReservationLineDto;
-
 import java.time.LocalDate;
 import java.util.List;
+
 
 @Getter
 @Setter
@@ -24,6 +24,5 @@ public class ReservationInputDto {
     private int bikeQuantity;
     private List<Long> bikeIds;
     private ReservationLineDto reservationLine;
-
 
 }

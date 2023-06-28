@@ -29,6 +29,7 @@ public class BikeService {
         this.reservationRepository = reservationRepository;
     }
 
+
     public boolean areBikesAvailable(LocalDate startDate, LocalDate endDate, int bikeQuantity) {
         List<Bike> allBikes = bikeRepository.findAll();
         List<Bike> availableBikes = new ArrayList<>(allBikes);
@@ -82,6 +83,8 @@ public class BikeService {
                 .orElseThrow(() -> new BikeNotFoundException("Fiets met ID " + bikeId + " niet gevonden."));
     }
 
+
+
     public void deleteBike(Long bikeId) {
         if (bikeRepository.existsById(bikeId)) {
             bikeRepository.deleteById(bikeId);
@@ -125,6 +128,5 @@ public class BikeService {
             throw new NoSuchElementException("Bike not found");
         }
     }
-
 
 }
