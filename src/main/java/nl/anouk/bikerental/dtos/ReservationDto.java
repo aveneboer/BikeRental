@@ -1,5 +1,6 @@
 package nl.anouk.bikerental.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class ReservationDto {
     private LocalDateTime endDate;
     private String type;
     private CustomerDto customer;
+    @JsonIgnore
     private ReservationLineDto reservationLine;
-
 
 }

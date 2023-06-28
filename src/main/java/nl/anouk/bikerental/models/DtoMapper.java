@@ -71,17 +71,6 @@ public class DtoMapper {
     }
 
 
-    public static Customer mapCustomerInputDtoToEntity(CustomerInputDto inputDto) {
-        Customer customer = new Customer();
-        customer.setFirstName(inputDto.getFirstName());
-        customer.setLastName(inputDto.getLastName());
-        customer.setPhoneNo(inputDto.getPhoneNo());
-        customer.setEmail(inputDto.getEmail());
-        customer.setAddress(inputDto.getAddress());
-        return customer;
-    }
-
-
     public static List<CustomerDto> mapCustomerListToDtoList(List<Customer> customers) {
         return customers.stream()
                 .map(customer -> mapCustomerToDto(customer, true))  // Gebruik includeReservations=true
@@ -99,9 +88,9 @@ public class DtoMapper {
         dto.setEmail(customer.getEmail());
         dto.setAddress(customer.getAddress());
 
-        if (includeReservations) {
+
+        if (includeReservations && customer.getReservations() != null) {
             List<ReservationDto> reservationDtos = new ArrayList<>();
-            /*   List<ReservationLineDto> reservationLineDtos = new ArrayList<>();*/
 
             for (Reservation reservation : customer.getReservations()) {
                 ReservationDto reservationDto = new ReservationDto();
@@ -112,25 +101,13 @@ public class DtoMapper {
 
                 reservationDtos.add(reservationDto);
             }
-            /*for (ReservationLine reservationLine : reservation.getCustomer().getReservationLines()) {
-                ReservationLineDto reservationLineDto = new ReservationLineDto();
-                reservationLineDto.setReservationLineId(reservationLine.getReservationLineId());
-                reservationLineDto.setDateOrdered(reservationLine.getDateOrdered());
-                reservationLineDto.setConfirmation(reservationLine.getConfirmation());
-                reservationLine.setStatus(reservationLine.getStatus());
-                reservationLine.setPaymentMethod(reservationLine.getPaymentMethod());
-                reservationLine.setDuration(reservationLine.getDuration());
-                reservationLine.setTotalPrice(reservationLine.getTotalPrice());
-
-                reservationLineDtos.add(reservationLineDto);*/
-
 
             dto.setReservations(reservationDtos);
-            /* dto.setReservationLines(reservationLineDtos);*/
-
         }
         return dto;
     }
+
+
 
     public static Customer mapDtoToCustomer(CustomerInputDto dto) {
         Customer customer = new Customer();
@@ -152,8 +129,6 @@ public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inp
 
 }
 
-
-
     public static ReservationDto mapReservationToDto(Reservation reservation) {
         ReservationDto dto = new ReservationDto();
         dto.setReservationId(reservation.getReservationId());
@@ -163,11 +138,7 @@ public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inp
 
         CustomerDto customerDto = mapCustomerToDto(reservation.getCustomer(), false);
         dto.setCustomer(customerDto);
-/*
 
-        ReservationLineDto reservationLineDto = mapReservationLineToDto(reservation.getReservationLine());
-        dto.setReservationLine(reservationLineDto);
-*/
 
         return dto;
     }
@@ -209,20 +180,6 @@ public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inp
 
         return dto;
     }
-    public static ReservationLine mapDtoToReservationLine(ReservationLineInputDto reservationLineInputDto) {
-        ReservationLine reservationLine = new ReservationLine();
-
-        reservationLine.setDateOrdered(reservationLineInputDto.getDateOrdered());
-        reservationLine.setConfirmation(reservationLineInputDto.getConfirmation());
-        reservationLine.setStatus(reservationLineInputDto.getStatus());
-        reservationLine.setPaymentMethod(reservationLineInputDto.getPaymentMethod());
-        reservationLine.setDuration(reservationLineInputDto.getDuration());
-        reservationLine.setTotalPrice(reservationLineInputDto.getTotalPrice());
-
-        return reservationLine;
-    }
-
-
 
 
     public static List<ReservationLineDto> mapReservationLineListToDtoList(List<ReservationLine> reservationLines) {
