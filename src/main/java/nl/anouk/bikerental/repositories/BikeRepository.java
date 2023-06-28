@@ -12,7 +12,8 @@ import java.util.Optional;
 @Repository
 
 public interface BikeRepository extends JpaRepository<Bike, Long> {
-    List<Bike> findAllBikesByBrandEqualsIgnoreCase(String Brand);
+
+    List<Bike> findAllByIsAvailable(Boolean isAvailable);
 
     List<Bike> findAll();
 

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Setter
 @Getter
@@ -14,11 +14,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReservationDto {
     public Long reservationId;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String type;
     private CustomerDto customer;
     @JsonIgnore
     private ReservationLineDto reservationLine;
+    private Long bikeId;
+    private int bikeQuantity;
+
+
 
 }

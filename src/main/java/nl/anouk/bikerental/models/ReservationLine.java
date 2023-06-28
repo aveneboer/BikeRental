@@ -27,12 +27,6 @@ public class ReservationLine {
     @Column(name = "confirmation")
     private String confirmation;
 
-    @Column(name = "status")
-    private String status;
-
-    @Column(name = "payment_method")
-    private String paymentMethod;
-
 
     @Column(name = "duration")
     private int duration;

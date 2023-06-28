@@ -15,9 +15,9 @@ import java.math.BigDecimal;
 
 public class BikeInputDto {
     private String brand;
-    private int quantity;
     private Long registrationNo;
     private BigDecimal hourlyPrice;
+    private Boolean isAvailable;
 
 }
 

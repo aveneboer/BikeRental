@@ -2,11 +2,8 @@
 
 package nl.anouk.bikerental.controllers;
 
-import jakarta.validation.Valid;
-import nl.anouk.bikerental.dtos.ReservationDto;
 import nl.anouk.bikerental.dtos.ReservationLineDto;
-import nl.anouk.bikerental.inputs.ReservationInputDto;
-import nl.anouk.bikerental.inputs.ReservationLineInputDto;
+import nl.anouk.bikerental.models.ReservationLine;
 import nl.anouk.bikerental.services.ReservationLineService;
 import nl.anouk.bikerental.services.ReservationService;
 import org.springframework.http.HttpStatus;
@@ -30,12 +27,17 @@ import java.util.List;
             return ResponseEntity.ok().body(reservationLine);
         }
 
-        @PostMapping("/reservationline")
-        public ResponseEntity<Object> createReservationLine(@Valid @RequestBody ReservationLineInputDto reservationLineInputDto, @RequestParam Long reservationId) {
-            ReservationDto reservationDto = reservationService.getReservationById(reservationId);
-            ReservationLineDto createdReservationLine = reservationLineService.createReservationLine(reservationDto, reservationLineInputDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdReservationLine);
+        @PostMapping("/reservation-line")
+        public ResponseEntity<ReservationLine> createReservationLine(@RequestParam Long reservationId) {
+            try {
+                ReservationLine reservationLine = reservationLineService.createReservationLine(reservationId);
+                return ResponseEntity.ok(reservationLine);
+            } catch (Exception e) {
+                // Handel de mogelijke uitzonderingen af
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
         }
+
 
 
         @GetMapping("/reservationlines")

@@ -48,7 +48,7 @@ public class CarService {
         }
     }
 
-    public CarDto updateCar(Long id, CarInputDto inputDto) {
+    public CarDto partialUpdateCar(Long id, CarInputDto inputDto) {
         Optional<Car> optionalCar = carRepository.findById(id);
 
         if (optionalCar.isPresent()) {

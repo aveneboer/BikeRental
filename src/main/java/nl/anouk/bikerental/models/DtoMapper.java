@@ -14,20 +14,21 @@ public class DtoMapper {
         BikeDto dto = new BikeDto();
         dto.setId(bike.getId());
         dto.setBrand(bike.getBrand());
-        dto.setQuantity(bike.getQuantity());
         dto.setRegistrationNo(bike.getRegistrationNo());
         dto.setHourlyPrice(bike.getHourlyPrice());
+        dto.setIsAvailable(bike.getIsAvailable());
         return dto;
     }
 
     public static Bike mapBikeInputDtoToEntity(BikeInputDto inputDto) {
         Bike bike = new Bike();
         bike.setBrand(inputDto.getBrand());
-        bike.setQuantity(inputDto.getQuantity());
         bike.setRegistrationNo(inputDto.getRegistrationNo());
         bike.setHourlyPrice(inputDto.getHourlyPrice());
+        bike.setIsAvailable(inputDto.getIsAvailable());
         return bike;
     }
+
     public static List<BikeDto> mapBikeListToDtoList(List<Bike> bikeList) {
         List<BikeDto> bikeDtoList = new ArrayList<>();
 
@@ -69,6 +70,15 @@ public class DtoMapper {
 
         return carDtoList;
     }
+    public static Customer mapCustomerDtoToEntity (CustomerDto Dto) {
+        Customer customer = new Customer();
+        customer.setFirstName(Dto.getFirstName());
+        customer.setLastName(Dto.getLastName());
+        customer.setPhoneNo(Dto.getPhoneNo());
+        customer.setEmail(Dto.getEmail());
+        customer.setAddress(Dto.getAddress());
+        return customer;
+    }
 
 
     public static List<CustomerDto> mapCustomerListToDtoList(List<Customer> customers) {
@@ -76,7 +86,6 @@ public class DtoMapper {
                 .map(customer -> mapCustomerToDto(customer, true))  // Gebruik includeReservations=true
                 .collect(Collectors.toList());
     }
-
 
 
     public static CustomerDto mapCustomerToDto(Customer customer, boolean includeReservations) {
@@ -119,15 +128,27 @@ public class DtoMapper {
         return customer;
     }
 
-public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inputDto) {
+
+
+   public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inputDto) {
         Reservation reservation = new Reservation();
-        reservation.setType(inputDto.getType());
         reservation.setStartDate(inputDto.getStartDate());
         reservation.setEndDate(inputDto.getEndDate());
+        reservation.setType(inputDto.getType());
+        reservation.setBikeQuantity(inputDto.getBikeQuantity());
+
+        Customer customer = new Customer();
+        customer.setFirstName(inputDto.getCustomer().getFirstName());
+        customer.setLastName(inputDto.getCustomer().getLastName());
+        customer.setPhoneNo(inputDto.getCustomer().getPhoneNo());
+        customer.setEmail(inputDto.getCustomer().getEmail());
+        customer.setAddress(inputDto.getCustomer().getAddress());
+
+        reservation.setCustomer(customer);
 
         return reservation;
 
-}
+    }
 
     public static ReservationDto mapReservationToDto(Reservation reservation) {
         ReservationDto dto = new ReservationDto();
@@ -135,10 +156,10 @@ public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inp
         dto.setStartDate(reservation.getStartDate());
         dto.setEndDate(reservation.getEndDate());
         dto.setType(reservation.getType());
+        dto.setBikeQuantity(reservation.getBikeQuantity());
 
         CustomerDto customerDto = mapCustomerToDto(reservation.getCustomer(), false);
         dto.setCustomer(customerDto);
-
 
         return dto;
     }
@@ -151,12 +172,8 @@ public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inp
 
     public static ReservationLine mapReservationLineInputDtoToEntity(ReservationLineInputDto inputDto) {
         ReservationLine reservationLine = new ReservationLine();
-        reservationLine.setDateOrdered(inputDto.getDateOrdered());
         reservationLine.setConfirmation(inputDto.getConfirmation());
-        reservationLine.setStatus(inputDto.getStatus());
-        reservationLine.setPaymentMethod(inputDto.getPaymentMethod());
-        reservationLine.setDuration(inputDto.getDuration());
-        reservationLine.setTotalPrice(inputDto.getTotalPrice());
+
 
         return reservationLine;
     }
@@ -165,13 +182,12 @@ public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inp
     public static ReservationLineDto mapReservationLineToDto(ReservationLine reservationLine) {
         ReservationLineDto dto = new ReservationLineDto();
 
-            dto.setReservationLineId(reservationLine.getReservationLineId());
-            dto.setDateOrdered(reservationLine.getDateOrdered());
-            dto.setConfirmation(reservationLine.getConfirmation());
-            dto.setStatus(reservationLine.getStatus());
-            dto.setPaymentMethod(reservationLine.getPaymentMethod());
-            dto.setDuration(reservationLine.getDuration());
-            dto.setTotalPrice(reservationLine.getTotalPrice());
+        dto.setReservationLineId(reservationLine.getReservationLineId());
+        dto.setDateOrdered(reservationLine.getDateOrdered());
+        dto.setConfirmation(reservationLine.getConfirmation());
+
+        dto.setDuration(reservationLine.getDuration());
+        dto.setTotalPrice(reservationLine.getTotalPrice());
 
         if (reservationLine.getReservation() != null) {
             ReservationDto reservationDto = mapReservationToDto(reservationLine.getReservation());

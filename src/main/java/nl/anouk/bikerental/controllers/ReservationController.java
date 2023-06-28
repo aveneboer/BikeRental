@@ -3,13 +3,15 @@ package nl.anouk.bikerental.controllers;
 import jakarta.validation.Valid;
 import nl.anouk.bikerental.dtos.ReservationDto;
 import nl.anouk.bikerental.inputs.ReservationInputDto;
+import nl.anouk.bikerental.models.DtoMapper;
+import nl.anouk.bikerental.models.Reservation;
 import nl.anouk.bikerental.services.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@RequestMapping("/reservations")
 @RestController
 public class ReservationController {
     private final ReservationService reservationService;
@@ -18,7 +20,7 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping("/reservations")
+    @GetMapping
     public ResponseEntity<List<ReservationDto>> getAllReservations() {
         List<ReservationDto> dtos = reservationService.getAllReservations();
         return ResponseEntity.ok().body(dtos);
@@ -30,11 +32,13 @@ public class ReservationController {
         return ResponseEntity.ok().body(reservation);
     }
 
-    @PostMapping("/reservation")
-    public ResponseEntity<Object> createReservation(@Valid @RequestBody ReservationInputDto reservationInputDto) {
-        ReservationDto dto = reservationService.createReservation(reservationInputDto);
-        return ResponseEntity.created(null).body(dto);
+    @PostMapping("/create_reservation")
+    public ResponseEntity<ReservationDto> createReservation(@RequestBody ReservationInputDto inputDto) {
+        Reservation reservation = reservationService.createReservation(inputDto);
+        ReservationDto reservationDto = DtoMapper.mapReservationToDto(reservation);
+        return ResponseEntity.ok(reservationDto);
     }
+
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Object> deleteReservation(@PathVariable Long id) {

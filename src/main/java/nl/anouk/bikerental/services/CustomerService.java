@@ -30,7 +30,7 @@ public class CustomerService {
     }
 
     public CustomerDto createCustomer(CustomerInputDto customerInputDto) {
-        Customer customer = DtoMapper.mapDtoToCustomer(customerInputDto);
+        Customer customer = DtoMapper.mapCustomerInputDtoToEntity(customerInputDto);
         Customer savedCustomer = customerRepository.save(customer);
         return DtoMapper.mapCustomerToDto(savedCustomer, false);
     }
@@ -43,6 +43,21 @@ public class CustomerService {
     }
 
     public CustomerDto updateCustomer(Long id, CustomerInputDto newCustomer) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException("Customer not found with id: " + id));
+        customer.setFirstName(newCustomer.getFirstName());
+        customer.setLastName(newCustomer.getLastName());
+        customer.setPhoneNo(newCustomer.getPhoneNo());
+        customer.setEmail(newCustomer.getEmail());
+        customer.setAddress(newCustomer.getAddress());
+        Customer updatedCustomer = customerRepository.save(customer);
+        CustomerDto dto = DtoMapper.mapCustomerToDto(updatedCustomer, false);
+
+        return dto;
+    }
+
+
+    public CustomerDto partialUpdateCustomer(Long id, CustomerInputDto newCustomer) {
         Customer existingCustomer = customerRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Customer not found with id: " + id));
 
