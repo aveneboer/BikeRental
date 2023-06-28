@@ -128,6 +128,17 @@ public class DtoMapper {
         return customer;
     }
 
+    public static Customer mapCustomerInputDtoToEntity(CustomerInputDto inputDto) {
+        Customer customer = new Customer();
+        customer.setFirstName(inputDto.getFirstName());
+        customer.setLastName(inputDto.getLastName());
+        customer.setPhoneNo(inputDto.getPhoneNo());
+        customer.setEmail(inputDto.getEmail());
+        customer.setAddress(inputDto.getAddress());
+
+        return customer;
+    }
+
 
 
    public static Reservation mapReservationInputDtoToEntity(ReservationInputDto inputDto) {
