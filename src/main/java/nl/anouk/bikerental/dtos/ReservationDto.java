@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Setter
 @Getter
@@ -20,9 +21,7 @@ public class ReservationDto {
     private CustomerDto customer;
     @JsonIgnore
     private ReservationLineDto reservationLine;
-    private Long bikeId;
+    private List<Long> bikeIds;
     private int bikeQuantity;
-
-
 
 }

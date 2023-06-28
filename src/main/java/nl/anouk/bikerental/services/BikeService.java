@@ -77,13 +77,10 @@ public class BikeService {
 
 
 
-    //standaard code
     public Bike getBikeById(Long bikeId) {
         return bikeRepository.findById(bikeId)
                 .orElseThrow(() -> new BikeNotFoundException("Fiets met ID " + bikeId + " niet gevonden."));
     }
-
-
 
     public void deleteBike(Long bikeId) {
         if (bikeRepository.existsById(bikeId)) {
@@ -116,9 +113,6 @@ public class BikeService {
             }
             if (updatedBikeInputDto.getRegistrationNo() != null) {
                 existingBike.setRegistrationNo(updatedBikeInputDto.getRegistrationNo());
-            }
-            if (updatedBikeInputDto.getHourlyPrice() != null) {
-                existingBike.setHourlyPrice(updatedBikeInputDto.getHourlyPrice());
             }
 
             bikeRepository.save(existingBike);

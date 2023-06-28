@@ -15,7 +15,6 @@ public class DtoMapper {
         dto.setId(bike.getId());
         dto.setBrand(bike.getBrand());
         dto.setRegistrationNo(bike.getRegistrationNo());
-        dto.setHourlyPrice(bike.getHourlyPrice());
         dto.setIsAvailable(bike.getIsAvailable());
         return dto;
     }
@@ -24,7 +23,6 @@ public class DtoMapper {
         Bike bike = new Bike();
         bike.setBrand(inputDto.getBrand());
         bike.setRegistrationNo(inputDto.getRegistrationNo());
-        bike.setHourlyPrice(inputDto.getHourlyPrice());
         bike.setIsAvailable(inputDto.getIsAvailable());
         return bike;
     }
@@ -45,7 +43,6 @@ public class DtoMapper {
         dto.setId(car.getId());
         dto.setModel(car.getModel());
         dto.setPassenger(car.getPassenger());
-        dto.setDayPrice(car.getDayPrice());
         dto.setQuantity(car.getQuantity());
         return dto;
     }
@@ -54,7 +51,6 @@ public class DtoMapper {
         Car car = new Car();
         car.setModel(inputDto.getModel());
         car.setQuantity(inputDto.getQuantity());
-        car.setDayPrice(inputDto.getDayPrice());
         car.setPassenger(inputDto.getPassenger());
         return car;
     }
@@ -168,11 +164,20 @@ public class DtoMapper {
         dto.setEndDate(reservation.getEndDate());
         dto.setType(reservation.getType());
         dto.setBikeQuantity(reservation.getBikeQuantity());
+        dto.setBikeIds(getBikeIds(reservation.getBikes()));
+
 
         CustomerDto customerDto = mapCustomerToDto(reservation.getCustomer(), false);
         dto.setCustomer(customerDto);
 
         return dto;
+    }
+
+
+    private static List<Long> getBikeIds(List<Bike> bikes) {
+        return bikes.stream()
+                .map(Bike::getId)
+                .collect(Collectors.toList());
     }
 
     public static List<ReservationDto> mapReservationListToDtoList(List<Reservation> reservations) {

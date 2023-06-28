@@ -60,9 +60,6 @@ public class CarService {
             if (inputDto.getPassenger() != 0) {
                 existingCar.setPassenger(inputDto.getPassenger());
             }
-            if (inputDto.getDayPrice() != null) {
-                existingCar.setDayPrice(inputDto.getDayPrice());
-            }
 
             carRepository.save(existingCar);
 

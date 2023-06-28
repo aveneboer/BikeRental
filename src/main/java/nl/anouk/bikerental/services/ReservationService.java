@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
@@ -42,21 +41,18 @@ public class ReservationService {
         LocalDate endDate = inputDto.getEndDate();
         int bikeQuantity = inputDto.getBikeQuantity();
 
-        // Andere vereiste velden voor de reservering instellen
-
         boolean areBikesAvailable = bikeService.areBikesAvailable(startDate, endDate, bikeQuantity);
 
         if (!areBikesAvailable) {
-            // Geef een foutmelding terug dat de fietsen niet beschikbaar zijn
-            throw new IllegalArgumentException("De gevraagde fietsen zijn niet beschikbaar voor de opgegeven periode.");
+
+            throw new IllegalArgumentException("Requested bikes are not available during this period.");
         }
 
         List<Long> availableBikeIds = bikeService.getAvailableBikeIds(startDate, endDate, bikeQuantity);
 
-// Controleer of het aantal beschikbare fietsen overeenkomt met het gevraagde aantal fietsen
         if (availableBikeIds.size() < bikeQuantity) {
-            // Geef een foutmelding terug dat er onvoldoende fietsen beschikbaar zijn
-            throw new IllegalArgumentException("Er zijn onvoldoende fietsen beschikbaar voor de opgegeven periode.");
+
+            throw new IllegalArgumentException("There are not enough bikes available during this period.");
         }
 
         List<Bike> bikes = new ArrayList<>();
@@ -115,5 +111,7 @@ public class ReservationService {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new RecordNotFoundException("Reservation not found"));
     }
+
+
 }
 
