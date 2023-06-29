@@ -4,6 +4,7 @@ import nl.anouk.bikerental.filter.JwtRequestFilter;
 import nl.anouk.bikerental.services.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -60,10 +61,20 @@ private final CustomUserDetailsService customUserDetailsService;
 
                 .requestMatchers("/**").permitAll() // alleen nu om methodes te kunnen draaien in Postman
 
-//                .requestMatchers(HttpMethod.POST, "/users").permitAll()
-//                .requestMatchers(HttpMethod.GET,"/users").hasRole("ADMIN")
-//                .requestMatchers(HttpMethod.POST,"/users/**").hasRole("ADMIN")
-//                .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET,"bikes/checkAvailability").hasRole("USER")
+                .requestMatchers(HttpMethod.GET,"cars/checkAvailability").hasRole("USER")
+                .requestMatchers(HttpMethod.GET,"/customers/{id}").hasRole("USER")
+                .requestMatchers(HttpMethod.POST,"/driverLicense/upload").hasRole("USER")
+                .requestMatchers(HttpMethod.GET,"/driverLicense/download/{id}").hasRole("USER")
+                .requestMatchers(HttpMethod.GET,"/reservations/reservation/{id}").hasRole("USER")
+                .requestMatchers(HttpMethod.POST,"/reservations/create_reservation").hasRole("USER")
+                .requestMatchers(HttpMethod.POST,"/reservation-line").hasRole("USER")
+
+
+                .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                .requestMatchers(HttpMethod.GET,"/users").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST,"/users/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
 //
 //                .requestMatchers(HttpMethod.GET, "/bikes").permitAll()
 //                .requestMatchers(HttpMethod.GET,"/bike/{id}").hasRole("ADMIN")
