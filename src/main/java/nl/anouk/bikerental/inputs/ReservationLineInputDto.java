@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 public class ReservationLineInputDto {
     private LocalDateTime dateOrdered;
     private String confirmation;
-
     private int duration;
     private double totalPrice;
     private ReservationDto reservation;

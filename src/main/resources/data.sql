@@ -8,17 +8,17 @@ VALUES
     ('Jane', 'Smith', '987654321', 'jane.smith@example.com', '456 Elm Street');
 
 -- Bike
-INSERT INTO bikes (brands, registration_numbers, hourly_price, is_Available)
+INSERT INTO bikes (brands, registration_numbers, is_Available)
 VALUES
-    ('Knaap', '12345', '15.50', 'true'),
-    ('Knaap', '34859', '15.50', 'true'),
-    ('Knaap', '841256', '15.50', 'true'),
-    ('PhatFour', '54321', '10.75', 'true');
+    ('Knaap', '12345', 'true'),
+    ('Knaap', '34859', 'true'),
+    ('Knaap', '841256', 'true'),
+    ('PhatFour', '54321', 'true');
 -- Car
-INSERT INTO cars (model, capacity, day_price, quantity)
+INSERT INTO cars (model, capacity, quantity, is_Available)
 VALUES
-    ('Toyota Highlander', 6, 85.00, 1),
-    ('Toyota RAV4', 3, 60.00, 2);
+    ('Toyota Highlander', 6, 1, 'true'),
+    ('Toyota RAV4', 3, 2, 'true');
 
 -- Reservation
 INSERT INTO reservations (start_date, end_date, type, bike_quantity, customer_id)

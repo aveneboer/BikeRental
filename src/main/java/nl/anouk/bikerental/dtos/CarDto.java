@@ -1,11 +1,10 @@
 
 package nl.anouk.bikerental.dtos;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -13,12 +12,10 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class CarDto {
     private Long id;
-
     private String model;
-
     private int passenger;
+    private Boolean isAvailable;
+    private String quantity;
 
-    private BigDecimal dayPrice;
-    private int quantity;
 }
 

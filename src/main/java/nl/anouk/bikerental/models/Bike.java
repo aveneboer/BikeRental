@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @AllArgsConstructor
@@ -25,10 +24,6 @@ public class Bike {
 
     @Column(name = "registration_numbers")
     private Long registrationNo;
-
-    @Column(name = "hourly_price")
-    private BigDecimal hourlyPrice;
-
 
     @Column(name = "is_Available")
     private Boolean isAvailable;

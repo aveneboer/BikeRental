@@ -41,6 +41,10 @@ public class Reservation {
             inverseJoinColumns = @JoinColumn(name = "bike_id")
     )
     private List<Bike> bikes;
+
+    @ManyToOne
+    @JoinColumn(name = "car_id")
+    private Car car;
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private ReservationLine reservationLine;
 

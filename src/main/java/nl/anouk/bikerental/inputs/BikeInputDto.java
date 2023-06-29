@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -16,7 +14,6 @@ import java.math.BigDecimal;
 public class BikeInputDto {
     private String brand;
     private Long registrationNo;
-    private BigDecimal hourlyPrice;
     private Boolean isAvailable;
 
 }

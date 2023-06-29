@@ -34,7 +34,7 @@ import java.util.List;
                 return ResponseEntity.ok(reservationLine);
             } catch (Exception e) {
                 // Handel de mogelijke uitzonderingen af
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
         }
 

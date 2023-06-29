@@ -5,9 +5,12 @@ import nl.anouk.bikerental.dtos.CarDto;
 import nl.anouk.bikerental.inputs.CarInputDto;
 import nl.anouk.bikerental.models.Car;
 import nl.anouk.bikerental.models.DtoMapper;
+import nl.anouk.bikerental.models.Reservation;
 import nl.anouk.bikerental.repositories.CarRepository;
+import nl.anouk.bikerental.repositories.ReservationRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -15,10 +18,29 @@ import java.util.Optional;
 @Service
 public class CarService {
     private final CarRepository carRepository;
+    private final ReservationRepository reservationRepository;
 
-    public CarService(CarRepository carRepository) {
+    public CarService(CarRepository carRepository, ReservationRepository reservationRepository) {
         this.carRepository = carRepository;
+        this.reservationRepository = reservationRepository;
     }
+
+
+    public boolean isCarAvailable(LocalDate startDate, LocalDate endDate) {
+        List<Car> allCars = carRepository.findAll();
+
+        for (Car car : allCars) {
+            for (Reservation reservation : car.getReservations()) {
+                if (endDate != null && reservation.getStartDate() != null && reservation.getEndDate() != null) {
+                    if (endDate.isAfter(reservation.getStartDate()) && startDate.isBefore(reservation.getEndDate())) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
 
     public List<CarDto> getAllCars() {
         List<Car> carList = carRepository.findAll();
@@ -59,9 +81,6 @@ public class CarService {
             }
             if (inputDto.getPassenger() != 0) {
                 existingCar.setPassenger(inputDto.getPassenger());
-            }
-            if (inputDto.getDayPrice() != null) {
-                existingCar.setDayPrice(inputDto.getDayPrice());
             }
 
             carRepository.save(existingCar);
