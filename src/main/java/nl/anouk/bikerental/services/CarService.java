@@ -81,6 +81,8 @@ public class CarService {
             }
             if (inputDto.getPassenger() != 0) {
                 existingCar.setPassenger(inputDto.getPassenger());
+            }  if (inputDto.getQuantity() != 0) {
+                existingCar.setQuantity(inputDto.getQuantity());
             }
 
             carRepository.save(existingCar);

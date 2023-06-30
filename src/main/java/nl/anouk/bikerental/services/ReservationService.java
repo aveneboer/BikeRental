@@ -1,5 +1,6 @@
 package nl.anouk.bikerental.services;
 
+import jakarta.validation.constraints.NotNull;
 import nl.anouk.bikerental.dtos.ReservationDto;
 import nl.anouk.bikerental.exceptions.RecordNotFoundException;
 import nl.anouk.bikerental.inputs.ReservationInputDto;
@@ -35,7 +36,7 @@ public class ReservationService {
         this.bikeRepository = bikeRepository;
     }
 
-    public Reservation createReservation(ReservationInputDto inputDto) {
+    public Reservation createReservation(@NotNull ReservationInputDto inputDto) {
         Reservation reservation = DtoMapper.mapReservationInputDtoToEntity(inputDto);
         LocalDate startDate = inputDto.getStartDate();
         LocalDate endDate = inputDto.getEndDate();

@@ -25,7 +25,7 @@ public class DriverLicenseController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadDriverLicense(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadDriverLicense(@RequestParam("file") MultipartFile file){
         try {
             DriverLicense driverLicense = driverLicenseService.saveDriverLicense(file);
             return ResponseEntity.ok("DriverLicense uploaded successfully. ID: " + driverLicense.getId());

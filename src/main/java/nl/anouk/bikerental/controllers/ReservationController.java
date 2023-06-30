@@ -7,6 +7,8 @@ import nl.anouk.bikerental.models.DtoMapper;
 import nl.anouk.bikerental.models.Reservation;
 import nl.anouk.bikerental.services.ReservationService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,10 +35,22 @@ public class ReservationController {
     }
 
     @PostMapping("/create_reservation")
-    public ResponseEntity<ReservationDto> createReservation(@RequestBody ReservationInputDto inputDto) {
-        Reservation reservation = reservationService.createReservation(inputDto);
-        ReservationDto reservationDto = DtoMapper.mapReservationToDto(reservation);
-        return ResponseEntity.ok(reservationDto);
+    public ResponseEntity<Object> createReservation(@RequestBody ReservationInputDto inputDto, BindingResult br) {
+
+        if (br.hasFieldErrors()) {
+            StringBuilder sb = new StringBuilder();
+            for (FieldError fe : br.getFieldErrors()) {
+                sb.append(fe.getField() + ": ");
+                sb.append(fe.getDefaultMessage());
+                sb.append("\n");
+            }
+            return ResponseEntity.badRequest().body(sb.toString());
+        } else {
+            Reservation reservation = reservationService.createReservation(inputDto);
+            ReservationDto reservationDto = DtoMapper.mapReservationToDto(reservation);
+            return ResponseEntity.ok(reservationDto);
+
+        }
     }
 
 
@@ -50,6 +64,7 @@ public class ReservationController {
     public ResponseEntity<Object> updateReservation(@PathVariable Long id, @Valid @RequestBody ReservationInputDto newReservation) {
         ReservationDto dto = reservationService.updateReservation(id, newReservation);
         return ResponseEntity.ok().body(dto);
-    }}
+    }
+}
 
 
