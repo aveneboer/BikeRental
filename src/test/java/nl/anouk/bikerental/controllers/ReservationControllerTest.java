@@ -11,6 +11,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
@@ -23,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-
+@ActiveProfiles("test")
 class ReservationControllerTest {
     @Mock
     private ReservationService reservationService;
@@ -39,6 +41,7 @@ class ReservationControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testGetAllReservations_ReturnsListOfReservations() {
         // Arrange
         List<ReservationDto> reservationDtos = new ArrayList<>();
@@ -56,6 +59,7 @@ class ReservationControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testGetReservation_ValidId_ReturnsReservation() {
         // Arrange
         Long id = 1L;
@@ -71,6 +75,7 @@ class ReservationControllerTest {
         verify(reservationService).getReservationById(id);
     }
     @Test
+    @WithMockUser(username="testuser", roles="USER")
     void testCreateReservation_ValidationErrors_ReturnsBadRequest() {
         // Arrange
         ReservationInputDto reservationInputDto = new ReservationInputDto();
@@ -93,6 +98,7 @@ class ReservationControllerTest {
 
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testDeleteReservation_ValidId_ReturnsNoContent() {
         // Arrange
         Long id = 1L;
@@ -106,6 +112,7 @@ class ReservationControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testUpdateReservation_ValidIdAndInput_ReturnsUpdatedReservation() {
         // Arrange
         Long id = 1L;

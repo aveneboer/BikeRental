@@ -13,6 +13,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -26,7 +28,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
-
+@ActiveProfiles("test")
 class BikeControllerTest {
     @Mock
     private BikeService bikeService;
@@ -44,6 +46,7 @@ class BikeControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="USER")
     void testCheckAvailability_BikesAvailable_ReturnsOk() {
         // Arrange
         LocalDate startDate = LocalDate.of(2023, 6, 1);
@@ -62,6 +65,7 @@ class BikeControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="USER")
     void testCheckAvailability_BikesNotAvailable_ReturnsOk() {
         // Arrange
         LocalDate startDate = LocalDate.of(2023, 6, 1);
@@ -80,6 +84,7 @@ class BikeControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testGetAllBikes_ReturnsListOfBikeDtos() {
         // Arrange
         List<BikeDto> expectedBikeDtos = Arrays.asList(
@@ -97,6 +102,7 @@ class BikeControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testGetBikeById_ReturnsBikeDto() {
         // Arrange
         Long bikeId = 1L;
@@ -111,6 +117,7 @@ class BikeControllerTest {
         verify(bikeService).getBikeById(bikeId);
     }
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testAddBike_ValidationErrors_ReturnsBadRequest() {
         // Arrange
         BikeInputDto bikeInputDto = new BikeInputDto();
@@ -132,6 +139,7 @@ class BikeControllerTest {
         verify(bikeService, never()).addBike(any(BikeInputDto.class));
     }
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testAddBike_ValidBikeInputDto_ReturnsCreatedBikeDto() {
         // Arrange
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -169,6 +177,7 @@ class BikeControllerTest {
 
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testUpdateBike_ReturnsUpdatedBikeDto() {
         // Arrange
         Long bikeId = 1L;
@@ -188,6 +197,7 @@ class BikeControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testDeleteBike_ReturnsNoContent() {
         // Arrange
         Long bikeId = 1L;

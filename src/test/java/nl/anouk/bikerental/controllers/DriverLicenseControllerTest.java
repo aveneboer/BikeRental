@@ -11,6 +11,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -23,6 +25,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+@ActiveProfiles("test")
 class DriverLicenseControllerTest {
         @Mock
         private DriverLicenseService driverLicenseService;
@@ -36,6 +39,7 @@ class DriverLicenseControllerTest {
         }
 
         @Test
+        @WithMockUser(username="testuser", roles="USER")
         void testUploadDriverLicense_ValidFile_ReturnsSuccessMessage() throws java.io.IOException {
             // Arrange
             MultipartFile file = mock(MultipartFile.class);
@@ -53,6 +57,7 @@ class DriverLicenseControllerTest {
         }
 
         @Test
+        @WithMockUser(username="testuser", roles="USER")
         void testUploadDriverLicense_IOException_ReturnsInternalServerError() throws java.io.IOException {
             // Arrange
             MultipartFile file = mock(MultipartFile.class);
@@ -68,6 +73,7 @@ class DriverLicenseControllerTest {
         }
 
     @Test
+    @WithMockUser(username="testuser", roles="USER")
     void testDownloadDriverLicense_ValidId_ReturnsDriverLicenseContent() throws RecordNotFoundException {
         // Arrange
         Long id = 1L;
@@ -88,6 +94,7 @@ class DriverLicenseControllerTest {
     }
 
         @Test
+        @WithMockUser(username="testuser", roles="USER")
         void testDownloadDriverLicense_RecordNotFoundException_ReturnsNotFound() throws RecordNotFoundException {
             // Arrange
             Long id = 1L;

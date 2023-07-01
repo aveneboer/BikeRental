@@ -9,13 +9,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Mockito.*;
-
+@ActiveProfiles("test")
 public class UserControllerTest {
 
     @Mock
@@ -30,6 +32,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     public void testGetUsers_ShouldReturnListOfUserDto() {
         // Arrange
         List<UserDto> expectedDtos = createUserDtoList();
@@ -45,6 +48,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     public void testGetUser_ShouldReturnUserDto() {
         // Arrange
         String username = "testuser";
@@ -61,6 +65,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     public void testUpdateUser_ShouldReturnNoContent() {
         // Arrange
         String username = "testuser";
@@ -76,6 +81,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     public void testDeleteUser_ShouldReturnNoContent() {
         // Arrange
         String username = "testuser";
@@ -91,6 +97,7 @@ public class UserControllerTest {
 
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     public void testAddUserAuthority_ShouldReturnNoContent() {
         // Arrange
         String username = "testuser";
@@ -107,6 +114,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     public void testDeleteUserAuthority_ShouldReturnNoContent() {
         // Arrange
         String username = "testuser";

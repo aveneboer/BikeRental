@@ -11,6 +11,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -25,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-
+@ActiveProfiles("test")
 class CarControllerTest {
     @Mock
     private CarService carService;
@@ -73,6 +75,7 @@ class CarControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testGetAllCars_NoModel_ReturnsOkWithCars() {
         // Arrange
         List<CarDto> cars = Arrays.asList(
@@ -91,6 +94,7 @@ class CarControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testGetAllCars_WithModel_ReturnsOkWithFilteredCars() {
         // Arrange
         String model = "Sedan";
@@ -110,6 +114,7 @@ class CarControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testGetCar_ReturnsOkWithCar() {
         // Arrange
         int passenger = 4;
@@ -126,6 +131,7 @@ class CarControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testAddCar_ValidCarInputDto_ReturnsCreatedCarDto() {
         // Arrange
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -162,6 +168,7 @@ class CarControllerTest {
 
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testAddCar_ValidationErrors_ReturnsBadRequest() {
         // Arrange
         CarInputDto carInputDto = new CarInputDto();
@@ -182,6 +189,7 @@ class CarControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testDeleteCar_ReturnsNoContent() {
         // Arrange
         Long carId = 1L;
@@ -195,6 +203,7 @@ class CarControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testUpdateCar_ReturnsUpdatedCar() {
         // Arrange
         Long carId = 1L;

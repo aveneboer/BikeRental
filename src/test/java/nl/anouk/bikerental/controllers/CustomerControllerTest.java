@@ -11,6 +11,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -23,7 +25,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
-
+@ActiveProfiles("test")
 class CustomerControllerTest {
     @Mock
     private CustomerService customerService;
@@ -37,6 +39,7 @@ class CustomerControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testGetAllCustomers_ReturnsCustomerDtoList() {
         // Arrange
         List<CustomerDto> customerDtoList = Arrays.asList(
@@ -56,6 +59,7 @@ class CustomerControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testGetCustomer_ValidId_ReturnsCustomerDto() {
         // Arrange
         Long customerId = 1L;
@@ -72,6 +76,7 @@ class CustomerControllerTest {
         verify(customerService).getCustomerById(customerId);
     }
     @Test
+    @WithMockUser(username="testuser", roles="USER")
     void testCreateCustomer_ValidInput_ReturnsCreated() {
         // Arrange
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -99,6 +104,7 @@ class CustomerControllerTest {
 
 
     @Test
+    @WithMockUser(username="testuser", roles="USER")
     void testCreateCustomer_ValidationErrors_ReturnsBadRequest() {
         // Arrange
         CustomerInputDto customerInputDto = new CustomerInputDto("", "", "123456789", "john.doe@example.com", "Address 1", new ArrayList<>());
@@ -120,6 +126,7 @@ class CustomerControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testDeleteCustomer_ValidId_ReturnsNoContent() {
         // Arrange
         Long customerId = 1L;
@@ -133,6 +140,7 @@ class CustomerControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testUpdateCustomer_ValidInput_ReturnsCustomerDto() {
         // Arrange
         Long customerId = 1L;
@@ -151,6 +159,7 @@ class CustomerControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     void testPartialUpdateCustomer_ValidInput_ReturnsCustomerDto() {
         // Arrange
         Long customerId = 1L;

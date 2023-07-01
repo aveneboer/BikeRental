@@ -12,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,7 +21,8 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-public class ReservationLineControllerTest {
+@ActiveProfiles("test")
+class ReservationLineControllerTest {
 
     @Mock
     private ReservationLineService reservationLineService;
@@ -35,6 +38,7 @@ public class ReservationLineControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     public void testGetReservationLine_ShouldReturnReservationLineDto() {
         // Arrange
         Long reservationLineId = 1L;
@@ -51,6 +55,7 @@ public class ReservationLineControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="USER")
     public void testCreateReservationLine_ShouldReturnCreatedReservationLine() {
         // Arrange
         Long reservationId = 1L;
@@ -67,6 +72,7 @@ public class ReservationLineControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="USER")
     public void testCreateReservationLine_ShouldReturnBadRequestOnException() {
         // Arrange
         Long reservationId = 1L;
@@ -81,6 +87,7 @@ public class ReservationLineControllerTest {
     }
 
     @Test
+    @WithMockUser(username="testuser", roles="ADMIN")
     public void testGetAllReservationLines_ShouldReturnListOfReservationLineDto() {
         // Arrange
         List<ReservationLineDto> expectedDtos = createReservationLineDtoList();
