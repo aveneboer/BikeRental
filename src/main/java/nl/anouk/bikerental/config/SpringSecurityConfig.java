@@ -4,7 +4,6 @@ import nl.anouk.bikerental.filter.JwtRequestFilter;
 import nl.anouk.bikerental.services.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -61,7 +60,7 @@ private final CustomUserDetailsService customUserDetailsService;
 
                 .requestMatchers("/**").permitAll() // alleen nu om methodes te kunnen draaien in Postman
 
-                .requestMatchers(HttpMethod.GET,"bikes/checkAvailability").hasRole("USER")
+ /*               .requestMatchers(HttpMethod.GET,"bikes/checkAvailability").hasRole("USER")
                 .requestMatchers(HttpMethod.GET,"cars/checkAvailability").hasRole("USER")
                 .requestMatchers(HttpMethod.GET,"/customers/{id}").hasRole("USER")
                 .requestMatchers(HttpMethod.POST,"/driverLicense/upload").hasRole("USER")
@@ -70,22 +69,24 @@ private final CustomUserDetailsService customUserDetailsService;
                 .requestMatchers(HttpMethod.POST,"/reservations/create_reservation").hasRole("USER")
                 .requestMatchers(HttpMethod.POST,"/reservation-line").hasRole("USER")
 
-
+                .requestMatchers(HttpMethod.POST,"/auth").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.GET,"/users").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST,"/users/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
-//
-//                .requestMatchers(HttpMethod.GET, "/bikes").permitAll()
-//                .requestMatchers(HttpMethod.GET,"/bike/{id}").hasRole("ADMIN")
-//                .requestMatchers(HttpMethod.POST,"/bikes").hasRole("ADMIN")
-//                .requestMatchers(HttpMethod.DELETE, "/bikes/{id}").hasRole("ADMIN")
-//
-//                .requestMatchers(HttpMethod.GET,"/customers").hasRole("ADMIN")
-//                .requestMatchers(HttpMethod.GET,"/reservations").hasRole("ADMIN")
-//                .requestMatchers(HttpMethod.POST,"/customers/**").hasRole("ADMIN")
-//                .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
-//                .requestMatchers(HttpMethod.POST, "/").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN") /*
+
+
+               .requestMatchers(HttpMethod.GET,"/bikes/**").hasRole("ADMIN")
+               .requestMatchers(HttpMethod.POST,"/bikes/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/bikes/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/bikes/**").hasRole("ADMIN")
+
+
+                .requestMatchers(HttpMethod.POST, "/").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/").hasRole("ADMIN")
 //
 //                .requestMatchers(HttpMethod.GET,"/bikes/all").hasRole("USER")
 //                .requestMatchers(HttpMethod.GET,"/cars").hasRole("USER")
@@ -98,9 +99,8 @@ private final CustomUserDetailsService customUserDetailsService;
 //                .requestMatchers(HttpMethod.DELETE, "/reservation/{id}").hasRole("USER")
 //                .requestMatchers(HttpMethod.PATCH, "/reservations/{id}").hasRole("USER")
 //
- //               .requestMatchers(HttpMethod.POST, "/driverLicense/upload").hasAnyRole("ADMIN", "USER")
 //
-//              //  .requestMatchers("/**").authenticated() is een wildcard, je mag overal bij zolang je maar ingelogd bent ongeacht user of admin
+//                .requestMatchers("/**").authenticated() is een wildcard, je mag overal bij zolang je maar ingelogd bent ongeacht user of admin
 //                .requestMatchers("/authenticated").authenticated()
 //                .requestMatchers("/authenticate").permitAll()/*allen dit punt mag toegankelijk zijn voor niet ingelogde gebruikers*/
                 .anyRequest().denyAll()

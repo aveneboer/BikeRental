@@ -5,6 +5,7 @@ import nl.anouk.bikerental.inputs.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,15 +88,16 @@ public class DtoMapper {
 
     public static CustomerDto mapCustomerToDto(Customer customer, boolean includeReservations) {
         CustomerDto dto = new CustomerDto();
-        dto.setCustomerId(customer.getCustomerId());
-        dto.setFirstName(customer.getFirstName());
-        dto.setLastName(customer.getLastName());
-        dto.setPhoneNo(customer.getPhoneNo());
-        dto.setEmail(customer.getEmail());
-        dto.setAddress(customer.getAddress());
+        if (customer != null) {
+            dto.setCustomerId(customer.getCustomerId());
+            dto.setFirstName(customer.getFirstName());
+            dto.setLastName(customer.getLastName());
+            dto.setPhoneNo(customer.getPhoneNo());
+            dto.setEmail(customer.getEmail());
+            dto.setAddress(customer.getAddress());
+        }
 
-
-        if (includeReservations && customer.getReservations() != null) {
+        if (includeReservations && customer != null && customer.getReservations() != null) {
             List<ReservationDto> reservationDtos = new ArrayList<>();
 
             for (Reservation reservation : customer.getReservations()) {
@@ -176,10 +178,15 @@ public class DtoMapper {
 
 
     private static List<Long> getBikeIds(List<Bike> bikes) {
+        if (bikes == null) {
+            return Collections.emptyList();
+        }
+
         return bikes.stream()
                 .map(Bike::getId)
                 .collect(Collectors.toList());
     }
+
 
     public static List<ReservationDto> mapReservationListToDtoList(List<Reservation> reservations) {
         return reservations.stream()

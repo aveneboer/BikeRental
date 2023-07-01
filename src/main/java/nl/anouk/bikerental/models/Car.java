@@ -21,17 +21,13 @@ public class Car {
     @Column(name = "model")
     private String model;
     @Column(name = "quantity")
-    private String quantity;
+    private int quantity;
     @Column(name = "capacity")
     private int passenger;
     @Column(name = "is_Available")
     private Boolean isAvailable;
     @OneToMany(mappedBy = "car")
     private List<Reservation> reservations;
-
-
-
-
 
 
 }

@@ -49,9 +49,14 @@ public class BikeService {
     }
 
     public List<Long> getAvailableBikeIds(LocalDate startDate, LocalDate endDate, int bikeQuantity) {
+        List<Bike> availableBikes = bikeRepository.findAllByIsAvailable(true);
+
+        if (availableBikes == null) {
+            throw new IllegalArgumentException("Bikes are not available.");
+        }
+
         List<Long> availableBikeIds = new ArrayList<>();
 
-        List<Bike> availableBikes = bikeRepository.findAllByIsAvailable(true);
         for (Bike bike : availableBikes) {
             boolean isAvailable = true;
             List<Reservation> reservations = reservationRepository.findActiveReservationsByBike(bike);

@@ -15,7 +15,7 @@ public class CarDto {
     private String model;
     private int passenger;
     private Boolean isAvailable;
-    private String quantity;
+    private int quantity;
 
 }
 
