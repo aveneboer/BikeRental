@@ -1,9 +1,11 @@
+
 package nl.anouk.bikerental.services;
 
 import nl.anouk.bikerental.dtos.UserDto;
 import nl.anouk.bikerental.exceptions.RecordNotFoundException;
 import nl.anouk.bikerental.models.Authority;
 import nl.anouk.bikerental.models.User;
+import nl.anouk.bikerental.repositories.CustomerRepository;
 import nl.anouk.bikerental.repositories.UserRepository;
 import nl.anouk.bikerental.utils.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +21,19 @@ import java.util.Set;
 @Service
 public class UserService {
   private final UserRepository userRepository;
+    private final CustomerRepository customerRepository;
+
   @Lazy
   @Autowired
  private PasswordEncoder passwordEncoder;
 
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, CustomerRepository customerRepository) {
         this.userRepository = userRepository;
-
+        this.customerRepository = customerRepository;
     }
 
-    public List<UserDto> getUsers() {
+        public List<UserDto> getUsers() {
         List<UserDto> collection = new ArrayList<>();
         List<User> list = userRepository.findAll();
         for (User user : list) {
@@ -56,7 +60,7 @@ public class UserService {
     public String createUser(UserDto userDto) {
         String randomString = RandomStringGenerator.generateAlphaNumeric(20);
         userDto.setApikey(randomString);
-        //Het wachtwoord moet hier nog encoded worden, nog implementeren//
+
         User newUser = userRepository.save(toUser(userDto));
         return newUser.getUsername();
     }
@@ -98,7 +102,7 @@ public class UserService {
     public static UserDto fromUser(User user){
 
         var dto = new UserDto();
-        //Het wachtwoord moet hier nog encoded worden, nog implementeren//
+
         dto.username = user.getUsername();
         dto.password = user.getPassword();
         dto.enabled = user.isEnabled();
@@ -112,7 +116,7 @@ public class UserService {
     public User toUser(UserDto userDto) {
 
         var user = new User();
-        //Het wachtwoord moet hier nog encoded worden, nog implementeren//
+
         user.setUsername(userDto.getUsername());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setEnabled(userDto.getEnabled());

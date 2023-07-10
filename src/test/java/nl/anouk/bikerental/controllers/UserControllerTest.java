@@ -1,6 +1,7 @@
 package nl.anouk.bikerental.controllers;
 
 import nl.anouk.bikerental.dtos.UserDto;
+import nl.anouk.bikerental.repositories.CustomerRepository;
 import nl.anouk.bikerental.services.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,13 +23,15 @@ public class UserControllerTest {
 
     @Mock
     private UserService userService;
+    @Mock
+    private CustomerRepository customerRepository;
 
     private UserController userController;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        userController = new UserController(userService);
+        userController = new UserController(userService, customerRepository);
     }
 
     @Test
@@ -104,14 +107,18 @@ public class UserControllerTest {
         String authority = "ROLE_ADMIN";
         Map<String, Object> fields = Map.of("authority", authority);
 
+        UserDto userDto = new UserDto();
+        userDto.setUsername(username);
+
         // Act
-        ResponseEntity<Object> response = userController.addUserAuthority(username, fields);
+        ResponseEntity<UserDto> response = userController.createUser(userDto);
 
         // Assert
-        Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Assertions.assertNull(response.getBody());
         verify(userService, times(1)).addAuthority(username, authority);
     }
+
 
     @Test
     @WithMockUser(username="testuser", roles="ADMIN")

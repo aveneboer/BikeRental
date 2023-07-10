@@ -1,11 +1,13 @@
 package nl.anouk.bikerental.services;
 
 import nl.anouk.bikerental.dtos.CustomerDto;
-import nl.anouk.bikerental.inputs.CustomerInputDto;
 import nl.anouk.bikerental.exceptions.RecordNotFoundException;
+import nl.anouk.bikerental.inputs.CustomerInputDto;
 import nl.anouk.bikerental.models.Customer;
 import nl.anouk.bikerental.models.DtoMapper;
+import nl.anouk.bikerental.models.Reservation;
 import nl.anouk.bikerental.repositories.CustomerRepository;
+import nl.anouk.bikerental.repositories.ReservationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,15 +15,18 @@ import java.util.List;
 @Service
 public class CustomerService {
     private final CustomerRepository customerRepository;
+    private final ReservationRepository reservationRepository;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, ReservationRepository reservationRepository) {
         this.customerRepository = customerRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     public List<CustomerDto> getAllCustomers() {
         List<Customer> customers = customerRepository.findAll();
         return DtoMapper.mapCustomerListToDtoList(customers);
     }
+
 
     public CustomerDto getCustomerById(Long id) {
         Customer customer = customerRepository.findById(id)
@@ -34,6 +39,7 @@ public class CustomerService {
         Customer savedCustomer = customerRepository.save(customer);
         return DtoMapper.mapCustomerToDto(savedCustomer, false);
     }
+
 
     public void deleteCustomer(Long id) {
         if (!customerRepository.existsById(id)) {
@@ -70,4 +76,26 @@ public class CustomerService {
         Customer updatedCustomer = customerRepository.save(existingCustomer);
         return DtoMapper.mapCustomerToDto(updatedCustomer, false);
     }
-}
+
+
+    public CustomerDto linkUserToCustomer(String username, String email) {
+        Customer customer = customerRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+
+        customer.setUser(username);
+        customerRepository.save(customer);
+
+        Reservation reservation = customer.getReservations().stream()
+                .findFirst()
+                .orElse(null);
+
+        if (reservation != null) {
+            reservation.setUser(customer.getUser());
+            reservationRepository.save(reservation);
+        }
+
+        return DtoMapper.mapCustomerToDto(customer, true);
+    }
+
+    }
+

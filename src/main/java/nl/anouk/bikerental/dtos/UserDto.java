@@ -1,16 +1,24 @@
+
 package nl.anouk.bikerental.dtos;
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import nl.anouk.bikerental.models.Authority;
 
 import java.util.Set;
 
 
 public class UserDto {
-
+    @NotNull(message = "Username is required")
     public String username;
+    @NotEmpty(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters")
     public String password;
     public Boolean enabled;
     public String apikey;
+    @NotEmpty(message = "Email is required")
     public String email;
     @JsonSerialize
     public Set<Authority> authorities;

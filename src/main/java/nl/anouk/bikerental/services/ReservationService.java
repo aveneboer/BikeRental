@@ -11,6 +11,7 @@ import nl.anouk.bikerental.models.Reservation;
 import nl.anouk.bikerental.repositories.BikeRepository;
 import nl.anouk.bikerental.repositories.CustomerRepository;
 import nl.anouk.bikerental.repositories.ReservationRepository;
+import nl.anouk.bikerental.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,19 +22,21 @@ import java.util.List;
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
+    private final UserRepository userRepository;
     private final BikeRepository bikeRepository;
     private final CustomerRepository customerRepository;
     private final BikeService bikeService;
     private final DtoMapper dtoMapper;
     private final CustomerService customerService;
 
-    public ReservationService(ReservationRepository reservationRepository, BikeService bikeService, CustomerService customerService, CustomerRepository customerRepository, DtoMapper dtoMapper, BikeRepository bikeRepository) {
+    public ReservationService(ReservationRepository reservationRepository, BikeService bikeService, CustomerService customerService, CustomerRepository customerRepository, DtoMapper dtoMapper, BikeRepository bikeRepository, UserRepository userRepository) {
         this.reservationRepository = reservationRepository;
         this.bikeService = bikeService;
         this.customerService = customerService;
         this.dtoMapper = dtoMapper;
         this.customerRepository = customerRepository;
         this.bikeRepository = bikeRepository;
+        this.userRepository = userRepository;
     }
 
     public Reservation createReservation(@NotNull ReservationInputDto inputDto) {
@@ -67,7 +70,7 @@ public class ReservationService {
         Customer customer = reservation.getCustomer();
         customerRepository.save(customer);
 
-        Reservation savedReservation = reservationRepository.save(reservation);
+        Reservation savedreservation = reservationRepository.save(reservation);
 
 
         return reservation;
@@ -103,6 +106,10 @@ public class ReservationService {
         if (newReservation.getType() != null) {
             reservation.setType(newReservation.getType());
         }
+        if (newReservation.getBikeQuantity() > 0) {
+            reservation.setBikeQuantity(newReservation.getBikeQuantity());
+        }
+
 
         Reservation updatedReservation = reservationRepository.save(reservation);
         return DtoMapper.mapReservationToDto(updatedReservation);
