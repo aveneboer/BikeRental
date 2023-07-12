@@ -31,9 +31,9 @@ public class CustomerController {
         return ResponseEntity.ok().body(dtos);
     }
 
-    @GetMapping("/customers/{id}")
-    public ResponseEntity<CustomerDto> getCustomer(@PathVariable("id") Long id) {
-        CustomerDto customer = customerService.getCustomerById(id);
+    @GetMapping("/customer/{lastName}")
+    public ResponseEntity<CustomerDto> getCustomer(@PathVariable("lastName") String lastName) {
+        CustomerDto customer = customerService.getCustomerByLastName(lastName);
         return ResponseEntity.ok().body(customer);
     }
 
@@ -72,10 +72,11 @@ public class CustomerController {
         return ResponseEntity.ok().body(dto);
     }
     @PutMapping("/link-to-user")
-    public ResponseEntity<CustomerDto> linkUserToCustomer(@RequestParam String username, @RequestParam String email, String Password) {
-        CustomerDto customerDto = customerService.linkUserToCustomer(username, email);
-        return ResponseEntity.ok(customerDto);
+    public ResponseEntity<Void> linkUserToCustomer(@RequestParam String username, @RequestParam String email) {
+        customerService.linkUserToCustomer(username, email);
+        return ResponseEntity.ok().build();
     }
+
 
 
 }

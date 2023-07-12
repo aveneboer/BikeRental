@@ -81,7 +81,7 @@ public class DtoMapper {
 
     public static List<CustomerDto> mapCustomerListToDtoList(List<Customer> customers) {
         return customers.stream()
-                .map(customer -> mapCustomerToDto(customer, true))  // Gebruik includeReservations=true
+                .map(customer -> mapCustomerToDto(customer, true))
                 .collect(Collectors.toList());
     }
 

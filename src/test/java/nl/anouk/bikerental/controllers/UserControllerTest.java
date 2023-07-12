@@ -2,6 +2,7 @@ package nl.anouk.bikerental.controllers;
 
 import nl.anouk.bikerental.dtos.UserDto;
 import nl.anouk.bikerental.repositories.CustomerRepository;
+import nl.anouk.bikerental.repositories.UserRepository;
 import nl.anouk.bikerental.services.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,11 +13,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 @ActiveProfiles("test")
 public class UserControllerTest {
@@ -25,13 +28,15 @@ public class UserControllerTest {
     private UserService userService;
     @Mock
     private CustomerRepository customerRepository;
+    @Mock
+    private UserRepository userRepository;
 
     private UserController userController;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        userController = new UserController(userService, customerRepository);
+        userController = new UserController(userService, customerRepository, userRepository);
     }
 
     @Test
@@ -110,8 +115,11 @@ public class UserControllerTest {
         UserDto userDto = new UserDto();
         userDto.setUsername(username);
 
+        BindingResult bindingResult = mock(BindingResult.class);
+        given(bindingResult.hasErrors()).willReturn(false);
+
         // Act
-        ResponseEntity<UserDto> response = userController.createUser(userDto);
+        ResponseEntity<Object> response = userController.createUser(userDto, bindingResult);
 
         // Assert
         Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -139,7 +147,7 @@ public class UserControllerTest {
     private UserDto createUserDto(String username) {
         UserDto dto = new UserDto();
         dto.setUsername(username);
-        // Set other properties as needed
+
         return dto;
     }
 

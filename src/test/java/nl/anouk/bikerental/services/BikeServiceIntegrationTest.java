@@ -34,7 +34,7 @@ import java.util.ArrayList;
 
         @Test
         public void testAreBikesAvailable() throws Exception {
-            // Maak en sla fietsen op in de repository
+
             Bike bike1 = new Bike();
             bike1.setBrand("Bike 1");
             bike1.setRegistrationNo(455825L);

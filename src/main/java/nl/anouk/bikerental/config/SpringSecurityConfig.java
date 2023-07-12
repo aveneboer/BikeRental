@@ -60,8 +60,8 @@ private final CustomUserDetailsService customUserDetailsService;
                 .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
 
                 .requestMatchers(HttpMethod.GET,"bikes/checkAvailability").permitAll()
-                .requestMatchers(HttpMethod.GET,"/bikes/{id}").hasRole("AMIN")
-                .requestMatchers(HttpMethod.GET,"/bikes/all").hasRole("AMIN")
+                .requestMatchers(HttpMethod.GET,"/bikes/{id}").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET,"/bikes/all").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST,"/bikes/add").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/bikes/{id}").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH, "/bikes/{id}").hasRole("ADMIN")
@@ -74,7 +74,7 @@ private final CustomUserDetailsService customUserDetailsService;
                 .requestMatchers(HttpMethod.PATCH,"cars/{id}").hasRole("ADMIN")
 
                 .requestMatchers(HttpMethod.GET,"/customers/customers").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET,"/customers/customers/{id}").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET,"/customers/customer/{lastName}").hasAnyRole("ADMIN", "USER")
                 .requestMatchers(HttpMethod.POST,"/customers/customers/{id}").permitAll()
                 .requestMatchers(HttpMethod.DELETE,"/customers/customers/{id}").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH,"/customers/customers/{id}").hasRole("ADMIN")
@@ -87,7 +87,8 @@ private final CustomUserDetailsService customUserDetailsService;
                 .requestMatchers(HttpMethod.GET,"/reservations/reservation/{id}").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST,"/reservations/create_reservation").permitAll()
                 .requestMatchers(HttpMethod.DELETE,"/reservations/reservation/{id}").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT,"/reservations/reservation/{id}").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/reservations/reservation/{id}").hasRole("ADMIN")
+
 
 
                 .requestMatchers(HttpMethod.POST,"/reservation-line").permitAll()

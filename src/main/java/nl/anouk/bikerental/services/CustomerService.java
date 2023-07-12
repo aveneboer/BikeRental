@@ -5,7 +5,6 @@ import nl.anouk.bikerental.exceptions.RecordNotFoundException;
 import nl.anouk.bikerental.inputs.CustomerInputDto;
 import nl.anouk.bikerental.models.Customer;
 import nl.anouk.bikerental.models.DtoMapper;
-import nl.anouk.bikerental.models.Reservation;
 import nl.anouk.bikerental.repositories.CustomerRepository;
 import nl.anouk.bikerental.repositories.ReservationRepository;
 import org.springframework.stereotype.Service;
@@ -28,11 +27,14 @@ public class CustomerService {
     }
 
 
-    public CustomerDto getCustomerById(Long id) {
-        Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new RecordNotFoundException("Customer not found with id: " + id));
+    public CustomerDto getCustomerByLastName(String lastName) {
+        Customer customer = customerRepository.getByLastNameIgnoreCase(lastName);
+        if (customer == null) {
+            throw new RecordNotFoundException("Customer not found with last name: " + lastName);
+        }
         return DtoMapper.mapCustomerToDto(customer, true);
     }
+
 
     public CustomerDto createCustomer(CustomerInputDto customerInputDto) {
         Customer customer = DtoMapper.mapCustomerInputDtoToEntity(customerInputDto);
@@ -78,23 +80,12 @@ public class CustomerService {
     }
 
 
-    public CustomerDto linkUserToCustomer(String username, String email) {
+    public void linkUserToCustomer(String username, String email) {
         Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
 
         customer.setUser(username);
         customerRepository.save(customer);
-
-        Reservation reservation = customer.getReservations().stream()
-                .findFirst()
-                .orElse(null);
-
-        if (reservation != null) {
-            reservation.setUser(customer.getUser());
-            reservationRepository.save(reservation);
-        }
-
-        return DtoMapper.mapCustomerToDto(customer, true);
     }
 
     }

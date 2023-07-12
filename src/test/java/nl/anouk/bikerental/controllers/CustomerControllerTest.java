@@ -18,13 +18,13 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
+
 @ActiveProfiles("test")
 class CustomerControllerTest {
     @Mock
@@ -43,9 +43,9 @@ class CustomerControllerTest {
     void testGetAllCustomers_ReturnsCustomerDtoList() {
         // Arrange
         List<CustomerDto> customerDtoList = Arrays.asList(
-                new CustomerDto(1L, "John", "Doe", "123456789", "john.doe@example.com", "Address 1", new ArrayList<>()),
-                new CustomerDto(2L, "Jane", "Smith", "987654321", "jane.smith@example.com", "Address 2", new ArrayList<>())
-        );
+                new CustomerDto(1L, "John", "Doe", "123456789", "john.doe@example.com", "Address 1", null, null),
+                new CustomerDto(2L, "Jane", "Smith", "987654321", "jane.smith@example.com", "Address 2", null, null)
+                );
 
         given(customerService.getAllCustomers()).willReturn(customerDtoList);
 
@@ -60,21 +60,22 @@ class CustomerControllerTest {
 
     @Test
     @WithMockUser(username="testuser", roles="ADMIN")
-    void testGetCustomer_ValidId_ReturnsCustomerDto() {
+    void testGetCustomer_ValidLastName_ReturnsCustomerDto() {
         // Arrange
-        Long customerId = 1L;
-        CustomerDto customerDto = new CustomerDto(customerId, "John", "Doe", "123456789", "john.doe@example.com", "Address 1", new ArrayList<>());
+        String lastName = "Doe";
+        CustomerDto customerDto = new CustomerDto(1L, "John", "Doe", "123456789", "john.doe@example.com", "Address 1", null, null);
 
-        given(customerService.getCustomerById(customerId)).willReturn(customerDto);
+        given(customerService.getCustomerByLastName(lastName)).willReturn(customerDto);
 
         // Act
-        ResponseEntity<CustomerDto> response = customerController.getCustomer(customerId);
+        ResponseEntity<CustomerDto> response = customerController.getCustomer(lastName);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(customerDto, response.getBody());
-        verify(customerService).getCustomerById(customerId);
+        verify(customerService).getCustomerByLastName(lastName);
     }
+
     @Test
     @WithMockUser(username="testuser", roles="USER")
     void testCreateCustomer_ValidInput_ReturnsCreated() {
@@ -83,8 +84,8 @@ class CustomerControllerTest {
         ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request);
         RequestContextHolder.setRequestAttributes(requestAttributes);
 
-        CustomerInputDto customerInputDto = new CustomerInputDto("John", "Doe", "123456789", "john.doe@example.com", "Address 1", new ArrayList<>());
-        CustomerDto createdCustomerDto = new CustomerDto(1L, "John", "Doe", "123456789", "john.doe@example.com", "Address 1", new ArrayList<>());
+        CustomerInputDto customerInputDto = new CustomerInputDto("John", "Doe", "123456789", "john.doe@example.com", "Address 1", null, null);
+        CustomerDto createdCustomerDto = new CustomerDto(2L, "Jane", "Smith", "987654321", "jane.smith@example.com", "Address 2", null, null);
 
         given(customerService.createCustomer(customerInputDto)).willReturn(createdCustomerDto);
 
@@ -107,7 +108,7 @@ class CustomerControllerTest {
     @WithMockUser(username="testuser", roles="USER")
     void testCreateCustomer_ValidationErrors_ReturnsBadRequest() {
         // Arrange
-        CustomerInputDto customerInputDto = new CustomerInputDto("", "", "123456789", "john.doe@example.com", "Address 1", new ArrayList<>());
+        CustomerInputDto customerInputDto = new CustomerInputDto("John", "Doe", "123456789", "john.doe@example.com", "Address 1", null, null);
 
         BindingResult bindingResult = mock(BindingResult.class);
         given(bindingResult.hasFieldErrors()).willReturn(true);
@@ -144,8 +145,8 @@ class CustomerControllerTest {
     void testUpdateCustomer_ValidInput_ReturnsCustomerDto() {
         // Arrange
         Long customerId = 1L;
-        CustomerInputDto newCustomerInputDto = new CustomerInputDto("John", "Updated Doe", "123456789", "john.doe@example.com", "Updated Address", new ArrayList<>());
-        CustomerDto updatedCustomerDto = new CustomerDto(customerId, "John", "Updated Doe", "123456789", "john.doe@example.com", "Updated Address", new ArrayList<>());
+        CustomerInputDto newCustomerInputDto = new CustomerInputDto("John", "Doe", "123456789", "john.doe@example.com", "Address 1", null, null);
+        CustomerDto updatedCustomerDto = new CustomerDto(2L, "Jane", "Smith", "987654321", "jane.smith@example.com", "Address 2", null, null);
 
         when(customerService.updateCustomer(customerId, newCustomerInputDto)).thenReturn(updatedCustomerDto);
 
@@ -163,8 +164,8 @@ class CustomerControllerTest {
     void testPartialUpdateCustomer_ValidInput_ReturnsCustomerDto() {
         // Arrange
         Long customerId = 1L;
-        CustomerInputDto newCustomerInputDto = new CustomerInputDto("John", null, null, null, "Updated Address", new ArrayList<>());
-        CustomerDto updatedCustomerDto = new CustomerDto(customerId, "John", "Doe", "123456789", "john.doe@example.com", "Updated Address", new ArrayList<>());
+        CustomerInputDto newCustomerInputDto = new CustomerInputDto("John", "Doe", "123456789", "john.doe@example.com", "Address 1", null, null);
+        CustomerDto updatedCustomerDto = new CustomerDto(2L, "Jane", "Smith", "987654321", "jane.smith@example.com", "Address 2", null, null);
 
         when(customerService.partialUpdateCustomer(customerId, newCustomerInputDto)).thenReturn(updatedCustomerDto);
 
