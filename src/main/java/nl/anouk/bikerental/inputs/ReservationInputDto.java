@@ -29,7 +29,7 @@ public class ReservationInputDto {
     private CustomerDto customer;
 
     private Long bikeId;
-    @NotNull
+
     private int bikeQuantity;
 
     private List<Long> bikeIds;

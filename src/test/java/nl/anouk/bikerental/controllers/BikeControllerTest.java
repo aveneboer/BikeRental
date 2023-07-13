@@ -3,7 +3,6 @@ package nl.anouk.bikerental.controllers;
 import nl.anouk.bikerental.dtos.BikeDto;
 import nl.anouk.bikerental.inputs.BikeInputDto;
 import nl.anouk.bikerental.models.Bike;
-import nl.anouk.bikerental.repositories.BikeRepository;
 import nl.anouk.bikerental.services.BikeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,12 +28,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 @ActiveProfiles("test")
+
 class BikeControllerTest {
     @Mock
     private BikeService bikeService;
-
-    @Mock
-    private BikeRepository bikeRepository;
 
 
     @InjectMocks

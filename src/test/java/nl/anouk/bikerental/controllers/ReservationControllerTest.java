@@ -2,7 +2,8 @@ package nl.anouk.bikerental.controllers;
 
 import nl.anouk.bikerental.dtos.ReservationDto;
 import nl.anouk.bikerental.inputs.ReservationInputDto;
-import nl.anouk.bikerental.models.DtoMapper;
+import nl.anouk.bikerental.models.Reservation;
+import nl.anouk.bikerental.repositories.ReservationRepository;
 import nl.anouk.bikerental.services.ReservationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import org.springframework.validation.FieldError;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,7 +32,7 @@ class ReservationControllerTest {
     @Mock
     private ReservationService reservationService;
     @Mock
-    private DtoMapper dtoMapper;
+    private ReservationRepository reservationRepository;
 
     @InjectMocks
     private ReservationController reservationController;
@@ -102,13 +104,16 @@ class ReservationControllerTest {
     void testDeleteReservation_ValidId_ReturnsNoContent() {
         // Arrange
         Long id = 1L;
+        Reservation reservation = new Reservation();
+        when(reservationRepository.findById(id)).thenReturn(Optional.of(reservation));
 
         // Act
         ResponseEntity<Object> response = reservationController.deleteReservation(id);
 
         // Assert
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        verify(reservationService).deleteReservation(id);
+        verify(reservationRepository).findById(id);
+        verify(reservationRepository).delete(reservation);
     }
 
     @Test
