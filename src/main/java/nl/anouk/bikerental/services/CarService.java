@@ -11,6 +11,7 @@ import nl.anouk.bikerental.repositories.ReservationRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -41,8 +42,38 @@ public class CarService {
         return true;
     }
 
+    public List<Long> getAvailableCarIds(LocalDate startDate, LocalDate endDate) {
+        List<Car> availableCars = carRepository.findAllByIsAvailable(true);
+        if (availableCars == null || availableCars.isEmpty()) {
+            throw new IllegalArgumentException("No cars are available.");
+        }
 
-    public List<CarDto> getAllCars() {
+        List<Long> availableCarIds = new ArrayList<>();
+
+        for (Car car : availableCars) {
+            boolean isAvailable = true;
+            for (Reservation reservation : car.getReservations()) {
+                if (endDate != null && reservation.getStartDate() != null && reservation.getEndDate() != null) {
+                    if (endDate.isAfter(reservation.getStartDate()) && startDate.isBefore(reservation.getEndDate())) {
+                        isAvailable = false;
+                        break;
+                    }
+                }
+            }
+            if (isAvailable) {
+                availableCarIds.add(car.getId());
+            }
+        }
+
+        return availableCarIds;
+    }
+
+    public Car getCarById(Long carId) {
+        return carRepository.findById(carId)
+                .orElseThrow(() -> new IllegalArgumentException("Car not found with ID: " + carId));
+    }
+
+        public List<CarDto> getAllCars() {
         List<Car> carList = carRepository.findAll();
         return DtoMapper.mapCarListToDtoList(carList);
     }
@@ -81,7 +112,8 @@ public class CarService {
             }
             if (inputDto.getPassenger() != 0) {
                 existingCar.setPassenger(inputDto.getPassenger());
-            }  if (inputDto.getQuantity() != 0) {
+            }
+            if (inputDto.getQuantity() != 0) {
                 existingCar.setQuantity(inputDto.getQuantity());
             }
 

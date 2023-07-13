@@ -2,9 +2,11 @@ package nl.anouk.bikerental.controllers;
 
 import jakarta.validation.Valid;
 import nl.anouk.bikerental.dtos.ReservationDto;
+import nl.anouk.bikerental.exceptions.RecordNotFoundException;
 import nl.anouk.bikerental.inputs.ReservationInputDto;
 import nl.anouk.bikerental.models.DtoMapper;
 import nl.anouk.bikerental.models.Reservation;
+import nl.anouk.bikerental.repositories.ReservationRepository;
 import nl.anouk.bikerental.services.ReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -12,17 +14,19 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin
 @RequestMapping("/reservations")
 @RestController
 public class ReservationController {
     private final ReservationService reservationService;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService, ReservationRepository reservationRepository) {
         this.reservationService = reservationService;
+        this. reservationRepository = reservationRepository;
     }
 
-    @GetMapping
+    @GetMapping(value = "")
     public ResponseEntity<List<ReservationDto>> getAllReservations() {
         List<ReservationDto> dtos = reservationService.getAllReservations();
         return ResponseEntity.ok().body(dtos);
@@ -56,11 +60,13 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Object> deleteReservation(@PathVariable Long id) {
-        reservationService.deleteReservation(id);
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException("Reservation not found with id: " + id));
+        reservationRepository.delete(reservation);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/reservations/{id}")
+    @PutMapping("/reservations/{id}")
     public ResponseEntity<Object> updateReservation(@PathVariable Long id, @Valid @RequestBody ReservationInputDto newReservation) {
         ReservationDto dto = reservationService.updateReservation(id, newReservation);
         return ResponseEntity.ok().body(dto);

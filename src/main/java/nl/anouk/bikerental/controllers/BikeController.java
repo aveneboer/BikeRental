@@ -9,6 +9,7 @@ import nl.anouk.bikerental.repositories.BikeRepository;
 import nl.anouk.bikerental.services.BikeService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
-
+@CrossOrigin
 @RestController
 @RequestMapping("/bikes")
 public class BikeController {
@@ -31,10 +32,15 @@ public class BikeController {
 
 
     @GetMapping("/checkAvailability")
+    @Transactional
     public ResponseEntity<String> checkAvailability(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                                     @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
                                                     @RequestParam("bikeQuantity") int bikeQuantity) {
-        boolean areBikesAvailable = bikeService.areBikesAvailable(startDate, endDate, bikeQuantity);
+        if (startDate == null || endDate == null) {
+            return ResponseEntity.badRequest().body("Start date and end date cannot be empty.");
+        }
+
+            boolean areBikesAvailable = bikeService.areBikesAvailable(startDate, endDate, bikeQuantity);
 
         if (areBikesAvailable) {
             return ResponseEntity.ok("Bikes are available.");
@@ -45,17 +51,20 @@ public class BikeController {
 
 
     @GetMapping("/all")
+    @Transactional
     public List<BikeDto> getAllBikes() {
         return bikeService.getAllBikes();
     }
 
     @GetMapping("/{id}")
+    @Transactional
     public Bike getBikeById(@PathVariable Long id) {
         return bikeService.getBikeById(id);
     }
 
 
     @PostMapping("/add")
+    @Transactional
     public ResponseEntity<Object> addBike(@Valid @RequestBody BikeInputDto bikeInputDto, BindingResult br) {
         if (br.hasFieldErrors()) {
             StringBuilder sb = new StringBuilder();
@@ -75,11 +84,13 @@ public class BikeController {
     }
 
     @PatchMapping("/{id}")
+    @Transactional
     public BikeDto updateBike(@PathVariable Long id, @RequestBody BikeInputDto updatedBikeInputDto) {
         return bikeService.partialUpdateBike(id, updatedBikeInputDto);
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public void deleteBike(@PathVariable Long id) {
         bikeService.deleteBike(id);
     }

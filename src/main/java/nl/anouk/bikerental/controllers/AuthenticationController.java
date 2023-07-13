@@ -10,7 +10,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -25,22 +24,16 @@ public class AuthenticationController {
 
     public AuthenticationController(CustomUserDetailsService userDetailsService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
         this.userDetailsService = userDetailsService;
-        //checken of dit geen CustomUserDetailsService moet worden en die dan userDetails noemen//
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
     }
 
-    /*
-         Deze methode geeft de principal (basis user gegevens) terug van de ingelogde gebruiker
-     */
+
     @GetMapping(value = "/authenticated")
     public ResponseEntity<Object> authenticated(Authentication authentication, Principal principal) {
         return ResponseEntity.ok().body(principal);
     }
 
-    /*
-    Deze methode geeft het JWT token terug wanneer de gebruiker de juiste inloggegevens op geeft.
-     */
     @PostMapping(value = "/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
 

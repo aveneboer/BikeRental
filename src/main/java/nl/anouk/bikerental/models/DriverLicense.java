@@ -1,9 +1,6 @@
 package nl.anouk.bikerental.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,4 +15,9 @@ public class DriverLicense {
     private String filename;
     @Lob
     private byte[] driverLicense;
+
+    @OneToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
 }

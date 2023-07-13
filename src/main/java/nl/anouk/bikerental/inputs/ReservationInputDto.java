@@ -21,17 +21,17 @@ public class ReservationInputDto {
     private LocalDate startDate;
     @NotNull
     private LocalDate endDate;
-    @NotNull
+
     private Long customerId;
     @NotBlank
     private String type;
-    @NotBlank
+
     private CustomerDto customer;
-    @NotNull
+
     private Long bikeId;
-    @NotNull
+
     private int bikeQuantity;
-    @NotNull
+
     private List<Long> bikeIds;
     private ReservationLineDto reservationLine;
 

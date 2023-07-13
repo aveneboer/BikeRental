@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+@CrossOrigin
     @RestController
     public class ReservationLineController {
         private final ReservationLineService reservationLineService;
@@ -33,7 +34,6 @@ import java.util.List;
                 ReservationLine reservationLine = reservationLineService.createReservationLine(reservationId);
                 return ResponseEntity.ok(reservationLine);
             } catch (Exception e) {
-                // Handel de mogelijke uitzonderingen af
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
         }

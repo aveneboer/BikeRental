@@ -1,10 +1,10 @@
 
+
 package nl.anouk.bikerental.models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +31,7 @@ public class User {
         @Column
         private String email;
 
+
         @OneToMany(
                 targetEntity = Authority.class,
                 mappedBy = "username",
@@ -38,6 +39,13 @@ public class User {
                 orphanRemoval = true,
                 fetch = FetchType.EAGER)
         private Set<Authority> authorities = new HashSet<>();
+
+
+        @OneToOne
+        @JoinColumn(name = "customer_id")
+        private Customer customer;
+
+
 
         public String getUsername() { return username; }
         public void setUsername(String username) {
@@ -49,8 +57,7 @@ public class User {
         public void setPassword(String password) {
             this.password = password;
         }
-        public boolean isEnabled() { return enabled;}
-        public void setEnabled(boolean enabled) { this.enabled = enabled; }
+
         public String getApikey() { return apikey; }
         public void setApikey(String apikey) { this.apikey = apikey; }
         public String getEmail() { return email; }
@@ -65,4 +72,5 @@ public class User {
         }
 
     }
+
 

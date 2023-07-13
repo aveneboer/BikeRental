@@ -119,6 +119,9 @@ public class BikeService {
             if (updatedBikeInputDto.getRegistrationNo() != null) {
                 existingBike.setRegistrationNo(updatedBikeInputDto.getRegistrationNo());
             }
+            if (updatedBikeInputDto.getIsAvailable() != null) {
+                existingBike.setIsAvailable(updatedBikeInputDto.getIsAvailable());
+            }
 
             bikeRepository.save(existingBike);
 

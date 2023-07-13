@@ -4,13 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import nl.anouk.bikerental.dtos.ReservationDto;
 import nl.anouk.bikerental.exceptions.RecordNotFoundException;
 import nl.anouk.bikerental.inputs.ReservationInputDto;
-import nl.anouk.bikerental.models.Bike;
-import nl.anouk.bikerental.models.Customer;
-import nl.anouk.bikerental.models.DtoMapper;
-import nl.anouk.bikerental.models.Reservation;
-import nl.anouk.bikerental.repositories.BikeRepository;
-import nl.anouk.bikerental.repositories.CustomerRepository;
-import nl.anouk.bikerental.repositories.ReservationRepository;
+import nl.anouk.bikerental.models.*;
+import nl.anouk.bikerental.repositories.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,19 +16,25 @@ import java.util.List;
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
+    private final UserRepository userRepository;
     private final BikeRepository bikeRepository;
     private final CustomerRepository customerRepository;
     private final BikeService bikeService;
     private final DtoMapper dtoMapper;
     private final CustomerService customerService;
+    private final CarService carService;
 
-    public ReservationService(ReservationRepository reservationRepository, BikeService bikeService, CustomerService customerService, CustomerRepository customerRepository, DtoMapper dtoMapper, BikeRepository bikeRepository) {
+
+    public ReservationService(ReservationRepository reservationRepository, BikeService bikeService, CustomerService customerService, CustomerRepository customerRepository, DtoMapper dtoMapper, BikeRepository bikeRepository, UserRepository userRepository, CarService carService) {
         this.reservationRepository = reservationRepository;
         this.bikeService = bikeService;
         this.customerService = customerService;
         this.dtoMapper = dtoMapper;
         this.customerRepository = customerRepository;
         this.bikeRepository = bikeRepository;
+        this.userRepository = userRepository;
+        this.carService = carService;
+
     }
 
     public Reservation createReservation(@NotNull ReservationInputDto inputDto) {
@@ -41,7 +42,9 @@ public class ReservationService {
         LocalDate startDate = inputDto.getStartDate();
         LocalDate endDate = inputDto.getEndDate();
         int bikeQuantity = inputDto.getBikeQuantity();
+        String type = inputDto.getType();
 
+        if ("Bike".equalsIgnoreCase(type)) {
         boolean areBikesAvailable = bikeService.areBikesAvailable(startDate, endDate, bikeQuantity);
 
         if (!areBikesAvailable) {
@@ -64,13 +67,27 @@ public class ReservationService {
 
         reservation.setBikes(bikes);
 
+        } else if ("Car".equalsIgnoreCase(type)) {
+            List<Long> availableCarIds = carService.getAvailableCarIds(startDate, endDate);
+
+            if (availableCarIds.isEmpty()) {
+                throw new IllegalArgumentException("Requested car is not available during this period.");
+            }
+
+            Long carId = availableCarIds.get(0);
+            Car car = carService.getCarById(carId);
+            reservation.setCar(car);
+        } else {
+            throw new IllegalArgumentException("Invalid reservation type: " + type);
+        }
+
         Customer customer = reservation.getCustomer();
         customerRepository.save(customer);
 
         Reservation savedReservation = reservationRepository.save(reservation);
 
 
-        return reservation;
+        return savedReservation;
     }
 
 
@@ -103,6 +120,10 @@ public class ReservationService {
         if (newReservation.getType() != null) {
             reservation.setType(newReservation.getType());
         }
+        if (newReservation.getBikeQuantity() > 0) {
+            reservation.setBikeQuantity(newReservation.getBikeQuantity());
+        }
+
 
         Reservation updatedReservation = reservationRepository.save(reservation);
         return DtoMapper.mapReservationToDto(updatedReservation);

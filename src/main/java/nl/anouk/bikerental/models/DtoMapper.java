@@ -81,7 +81,7 @@ public class DtoMapper {
 
     public static List<CustomerDto> mapCustomerListToDtoList(List<Customer> customers) {
         return customers.stream()
-                .map(customer -> mapCustomerToDto(customer, true))  // Gebruik includeReservations=true
+                .map(customer -> mapCustomerToDto(customer, true))
                 .collect(Collectors.toList());
     }
 
@@ -95,6 +95,14 @@ public class DtoMapper {
             dto.setPhoneNo(customer.getPhoneNo());
             dto.setEmail(customer.getEmail());
             dto.setAddress(customer.getAddress());
+
+            if (customer.getDriverLicense() != null) {
+                DriverLicenseDto driverLicenseDto = new DriverLicenseDto();
+                driverLicenseDto.setId(customer.getDriverLicense().getId());
+                driverLicenseDto.setFilename(customer.getDriverLicense().getFilename());
+
+                dto.setDriverLicense(driverLicenseDto);
+            }
         }
 
         if (includeReservations && customer != null && customer.getReservations() != null) {
@@ -124,8 +132,17 @@ public class DtoMapper {
         customer.setPhoneNo(dto.getPhoneNo());
         customer.setEmail(dto.getEmail());
         customer.setAddress(dto.getAddress());
+
+        if (dto.getDriverLicense() != null) {
+            DriverLicense driverLicense = new DriverLicense();
+            driverLicense.setFilename(dto.getDriverLicense().getFilename());
+            driverLicense.setDriverLicense(dto.getDriverLicense().getDriverLicense());
+            customer.setDriverLicense(driverLicense);
+        }
+
         return customer;
     }
+
 
     public static Customer mapCustomerInputDtoToEntity(CustomerInputDto inputDto) {
         Customer customer = new Customer();
@@ -134,6 +151,11 @@ public class DtoMapper {
         customer.setPhoneNo(inputDto.getPhoneNo());
         customer.setEmail(inputDto.getEmail());
         customer.setAddress(inputDto.getAddress());
+        if (inputDto.getDriverLicense() != null) {
+            DriverLicense driverLicense = new DriverLicense();
+            driverLicense.setFilename(inputDto.getDriverLicense().getFilename());
+            customer.setDriverLicense(driverLicense);
+        }
 
         return customer;
     }
@@ -154,6 +176,13 @@ public class DtoMapper {
         customer.setEmail(inputDto.getCustomer().getEmail());
         customer.setAddress(inputDto.getCustomer().getAddress());
 
+       if (inputDto.getCustomer().getDriverLicense() != null) {
+           DriverLicense driverLicense = new DriverLicense();
+           driverLicense.setFilename(inputDto.getCustomer().getDriverLicense().getFilename());
+           // Voeg andere attributen van DriverLicense toe indien aanwezig
+           customer.setDriverLicense(driverLicense);
+       }
+
         reservation.setCustomer(customer);
 
         return reservation;
@@ -172,6 +201,15 @@ public class DtoMapper {
 
         CustomerDto customerDto = mapCustomerToDto(reservation.getCustomer(), false);
         dto.setCustomer(customerDto);
+
+        if (reservation.getCustomer().getDriverLicense() != null) {
+            DriverLicenseDto driverLicenseDto = new DriverLicenseDto();
+            driverLicenseDto.setId(reservation.getCustomer().getDriverLicense().getId());
+            driverLicenseDto.setFilename(reservation.getCustomer().getDriverLicense().getFilename());
+
+            customerDto.setDriverLicense(driverLicenseDto);
+        }
+
 
         return dto;
     }

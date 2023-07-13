@@ -34,7 +34,20 @@ public class Customer {
     @Column(name = "address")
     private String address;
 
-   @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToOne(mappedBy = "customer")
+    private DriverLicense driverLicense;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations;
 
+    public void setUser(String username) {
+        User user = new User();
+        user.setUsername(username);
+        this.user = user;
+        user.setCustomer(this);
+}
 }
