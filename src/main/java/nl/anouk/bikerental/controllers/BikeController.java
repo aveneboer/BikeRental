@@ -91,8 +91,9 @@ public class BikeController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public void deleteBike(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteBike(@PathVariable Long id) {
         bikeService.deleteBike(id);
+        return ResponseEntity.noContent().build();
     }
 
 
