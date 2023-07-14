@@ -25,7 +25,7 @@ public class UserService {
 
   @Lazy
   @Autowired
- private PasswordEncoder passwordEncoder;
+  PasswordEncoder passwordEncoder;
 
 
     public UserService(UserRepository userRepository, CustomerRepository customerRepository) {
@@ -61,8 +61,17 @@ public class UserService {
         String randomString = RandomStringGenerator.generateAlphaNumeric(20);
         userDto.setApikey(randomString);
 
-        User newUser = userRepository.save(toUser(userDto));
-        return newUser.getUsername();
+        User newUser = toUser(userDto);
+        if (newUser == null) {
+            throw new RuntimeException("Failed to create user. User object is null.");
+        }
+
+        User savedUser = userRepository.save(newUser);
+        if (savedUser == null) {
+            throw new RuntimeException("Failed to create user. Saved user object is null.");
+        }
+
+        return savedUser.getUsername();
     }
 
     public void deleteUser(String username) {

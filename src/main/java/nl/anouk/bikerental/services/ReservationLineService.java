@@ -23,15 +23,9 @@ public class ReservationLineService {
     private final ReservationLineRepository reservationLineRepository;
     private final ReservationRepository reservationRepository;
 
-    private final BikeService bikeService;
-    private final CarService carService;
-    private final ReservationService reservationService;
 
-    public ReservationLineService(ReservationLineRepository reservationLineRepository, BikeService bikeService, CarService carService, ReservationService reservationService, ReservationRepository reservationRepository) {
+    public ReservationLineService(ReservationLineRepository reservationLineRepository, ReservationRepository reservationRepository) {
         this.reservationLineRepository = reservationLineRepository;
-        this.bikeService = bikeService;
-        this.carService = carService;
-        this.reservationService = reservationService;
         this. reservationRepository = reservationRepository;
 
     }
@@ -80,4 +74,5 @@ public class ReservationLineService {
 
         return reservationLine;
     }
+
 }

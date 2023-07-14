@@ -84,7 +84,7 @@ public class BikeService {
 
     public Bike getBikeById(Long bikeId) {
         return bikeRepository.findById(bikeId)
-                .orElseThrow(() -> new BikeNotFoundException("Fiets met ID " + bikeId + " niet gevonden."));
+                .orElseThrow(() -> new BikeNotFoundException("Bike with Id " + bikeId + " has not been found."));
     }
 
     public void deleteBike(Long bikeId) {
@@ -102,9 +102,12 @@ public class BikeService {
 
     public BikeDto addBike(BikeInputDto inputDto) {
         Bike bike = DtoMapper.mapBikeInputDtoToEntity(inputDto);
-        bikeRepository.save(bike);
+        Bike savedBike = bikeRepository.save(bike);
 
-        return DtoMapper.mapBikeToDto(bike);
+        if (savedBike == null) {
+            throw new RuntimeException("Failed to save bike. Saved bike object is null.");
+        }
+        return DtoMapper.mapBikeToDto(savedBike);
     }
 
     public BikeDto partialUpdateBike(Long id, BikeInputDto updatedBikeInputDto) {

@@ -1,123 +1,110 @@
 package nl.anouk.bikerental.controllers;
 
-import nl.anouk.bikerental.dtos.ReservationDto;
 import nl.anouk.bikerental.dtos.ReservationLineDto;
+import nl.anouk.bikerental.exceptions.RecordNotFoundException;
 import nl.anouk.bikerental.models.ReservationLine;
+import nl.anouk.bikerental.services.CustomUserDetailsService;
 import nl.anouk.bikerental.services.ReservationLineService;
 import nl.anouk.bikerental.services.ReservationService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import nl.anouk.bikerental.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
-
+@WebMvcTest(ReservationLineController.class)
 @ActiveProfiles("test")
-class ReservationLineControllerTest {
+@AutoConfigureMockMvc(addFilters = false)
+public class ReservationLineControllerTest {
 
-    @Mock
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
     private ReservationLineService reservationLineService;
-    @Mock
+
+    @MockBean
+    CustomUserDetailsService customUserDetailsService;
+    @MockBean
+    private JwtUtil jwtUtil;
+
+    @MockBean
     private ReservationService reservationService;
 
-    private ReservationLineController reservationLineController;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        reservationLineController = new ReservationLineController(reservationLineService, reservationService);
-    }
-
     @Test
-    @WithMockUser(username="testuser", roles="ADMIN")
-    public void testGetReservationLine_ShouldReturnReservationLineDto() {
+    public void testGetReservationLine_WithValidId_ReturnsOk() throws Exception {
         // Arrange
         Long reservationLineId = 1L;
-        ReservationLineDto expectedDto = createReservationLineDto(reservationLineId);
-        when(reservationLineService.getReservationLineById(reservationLineId)).thenReturn(expectedDto);
+        ReservationLineDto reservationLineDto = new ReservationLineDto();
+        reservationLineDto.setReservationLineId(reservationLineId);
+        Mockito.when(reservationLineService.getReservationLineById(reservationLineId)).thenReturn(reservationLineDto);
 
-        // Act
-        ResponseEntity<ReservationLineDto> response = reservationLineController.getReservationLine(reservationLineId);
-
-        // Assert
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assertions.assertEquals(expectedDto, response.getBody());
-        verify(reservationLineService, times(1)).getReservationLineById(reservationLineId);
+        // Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/reservationlines/{id}", reservationLineId))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.reservationLineId").value(reservationLineId));
     }
 
     @Test
-    @WithMockUser(username="testuser", roles="USER")
-    public void testCreateReservationLine_ShouldReturnCreatedReservationLine() {
+    public void testGetReservationLine_WithInvalidId_ReturnsNotFound() throws Exception {
+        // Arrange
+        Long reservationLineId = 1L;
+        Mockito.when(reservationLineService.getReservationLineById(reservationLineId)).thenThrow(RecordNotFoundException.class);
+
+        // Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/reservationlines/{id}", reservationLineId))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    public void testCreateReservationLine_WithValidReservationId_ReturnsOk() throws Exception {
         // Arrange
         Long reservationId = 1L;
-        ReservationLine expectedReservationLine = new ReservationLine();
-        when(reservationLineService.createReservationLine(reservationId)).thenReturn(expectedReservationLine);
+        ReservationLine reservationLine = new ReservationLine();
+        reservationLine.setReservationLineId(1L);
+        Mockito.when(reservationLineService.createReservationLine(reservationId)).thenReturn(reservationLine);
 
-        // Act
-        ResponseEntity<ReservationLine> response = reservationLineController.createReservationLine(reservationId);
-
-        // Assert
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assertions.assertEquals(expectedReservationLine, response.getBody());
-        verify(reservationLineService, times(1)).createReservationLine(reservationId);
+        // Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/reservation-line")
+                        .param("reservationId", String.valueOf(reservationId)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.reservationLineId").exists());
     }
 
+
     @Test
-    @WithMockUser(username="testuser", roles="USER")
-    public void testCreateReservationLine_ShouldReturnBadRequestOnException() {
+    public void testCreateReservationLine_WithInvalidReservationId_ReturnsBadRequest() throws Exception {
         // Arrange
         Long reservationId = 1L;
-        when(reservationLineService.createReservationLine(reservationId)).thenThrow(new RuntimeException());
+        Mockito.when(reservationLineService.createReservationLine(reservationId)).thenAnswer(invocation -> {
+            throw new Exception("Invalid reservation ID");
+        });
 
-        // Act
-        ResponseEntity<ReservationLine> response = reservationLineController.createReservationLine(reservationId);
 
-        // Assert
-        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        verify(reservationLineService, times(1)).createReservationLine(reservationId);
+        // Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/reservation-line")
+                        .param("reservationId", String.valueOf(reservationId)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
-    @WithMockUser(username="testuser", roles="ADMIN")
-    public void testGetAllReservationLines_ShouldReturnListOfReservationLineDto() {
+    public void testGetAllReservationLines_ReturnsOk() throws Exception {
         // Arrange
-        List<ReservationLineDto> expectedDtos = createReservationLineDtoList();
-        when(reservationLineService.getAllReservationLines()).thenReturn(expectedDtos);
+        List<ReservationLineDto> reservationLineDtos = new ArrayList<>();
+        Mockito.when(reservationLineService.getAllReservationLines()).thenReturn(reservationLineDtos);
 
-        // Act
-        ResponseEntity<List<ReservationLineDto>> response = reservationLineController.getAllReservationLines();
-
-        // Assert
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assertions.assertEquals(expectedDtos, response.getBody());
-        verify(reservationLineService, times(1)).getAllReservationLines();
-    }
-
-
-    private ReservationLineDto createReservationLineDto(Long reservationLineId) {
-        ReservationLineDto dto = new ReservationLineDto();
-        dto.setReservationLineId(reservationLineId);
-        dto.setDateOrdered(LocalDateTime.now());
-        dto.setConfirmation("CONFIRMED");
-        dto.setDuration(7);
-        dto.setTotalPrice(100.0);
-        dto.setReservation(new ReservationDto());
-        return dto;
-    }
-
-    private List<ReservationLineDto> createReservationLineDtoList() {
-        List<ReservationLineDto> dtos = new ArrayList<>();
-        dtos.add(createReservationLineDto(1L));
-        dtos.add(createReservationLineDto(2L));
-        return dtos;
+        // Act & Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/reservationlines"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$").isArray());
     }
 }
