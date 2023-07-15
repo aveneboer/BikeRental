@@ -96,7 +96,7 @@ public class DtoMapper {
             dto.setEmail(customer.getEmail());
             dto.setAddress(customer.getAddress());
 
-            if (customer.getDriverLicense() != null) {
+           if (customer.getDriverLicense() != null) {
                 DriverLicenseDto driverLicenseDto = new DriverLicenseDto();
                 driverLicenseDto.setId(customer.getDriverLicense().getId());
                 driverLicenseDto.setFilename(customer.getDriverLicense().getFilename());
@@ -179,7 +179,7 @@ public class DtoMapper {
        if (inputDto.getCustomer().getDriverLicense() != null) {
            DriverLicense driverLicense = new DriverLicense();
            driverLicense.setFilename(inputDto.getCustomer().getDriverLicense().getFilename());
-           // Voeg andere attributen van DriverLicense toe indien aanwezig
+
            customer.setDriverLicense(driverLicense);
        }
 

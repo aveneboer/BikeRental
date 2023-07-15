@@ -26,6 +26,6 @@ public class CustomerInputDto {
     private String address;
 
     private List<ReservationDto> reservations;
-    private DriverLicenseDto driverLicense;
+   private DriverLicenseDto driverLicense;
 
 }

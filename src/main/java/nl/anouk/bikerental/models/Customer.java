@@ -38,8 +38,10 @@ public class Customer {
     @JoinColumn(name = "user_id")
     private User user;
 
+
     @OneToOne(mappedBy = "customer")
     private DriverLicense driverLicense;
+
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations;
